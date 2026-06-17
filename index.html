@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Safety Cirúrgica — Benchmark de Processos | TECNASA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="hdr">
+    <div class="hdr-row">
+      <div>
+        <div class="brand">TECNASA</div>
+        <div class="brand-sub">Consultoria em Gestão Empresarial</div>
+      </div>
+      <div class="hdr-title">
+        <b>Safety Cirúrgica — OPME &amp; Distribuição Médica</b> — Benchmark de Processos por Setor
+      </div>
+      <button class="btn-exp" onclick="openModal()">⬇ Exportar</button>
+    </div>
+    <nav class="sector-nav" id="sector-nav"></nav>
+  </header>
+
+  <div id="sector-pages"></div>
+
+  <footer>
+    <div class="ft">TECNASA Consultoria | Benchmark de Processos — Safety Cirúrgica</div>
+    <div class="ft" id="gen-date"></div>
+    <div class="ft">Confidencial — uso interno</div>
+  </footer>
+
+  <!-- MODAL EXPORTAR -->
+  <div class="modal-ov" id="mo">
+    <div class="modal">
+      <div class="modal-t">Exportar Relatório</div>
+      <div class="modal-b">
+        Para salvar como PDF:<br><br>
+        1. Pressione <strong>Ctrl+P</strong> (Win) / <strong>Cmd+P</strong> (Mac)<br>
+        2. Selecione <strong>Salvar como PDF</strong><br>
+        3. Configure para <strong>Paisagem</strong> e margens <strong>Mínimas</strong><br>
+        4. Clique em Salvar<br><br>
+        <em>Recomendado: exportar um setor por vez para melhor legibilidade.</em>
+      </div>
+      <button class="modal-btn" onclick="closeModal()">Entendido</button>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/render.js"></script>
+</body>
+
+</html>
