@@ -2,54 +2,1470 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Safety Cirúrgica — Benchmark de Processos | TECNASA</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Cirúrgica — Diagnóstico de Processos | TECNASA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1A3E72;
+            --dark: #0F2547;
+            --light: #2563C4;
+            --accent: #00D9FF;
+            --bg: #f0f4f8;
+            --white: #ffffff;
+            --txt: #1a1a2e;
+            --soft: #5a6a80;
+            --ok: #15803D;
+            --warn: #B45309;
+            --high: #C2410C;
+            --crit: #B91C1C;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            font-size: 13px
+        }
+
+        /* ── HEADER ── */
+        .hdr {
+            background: var(--dark);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background-image: linear-gradient(rgba(0, 217, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 217, 255, .04) 1px, transparent 1px);
+            background-size: 40px 40px
+        }
+
+        .hdr-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 36px;
+            border-bottom: 1px solid rgba(0, 217, 255, .12)
+        }
+
+        .brand {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--accent);
+            letter-spacing: .06em
+        }
+
+        .brand-sub {
+            font-size: 10px;
+            color: rgba(255, 255, 255, .4);
+            margin-top: 2px
+        }
+
+        .hdr-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: #fff;
+            text-align: center
+        }
+
+        .hdr-title b {
+            color: var(--accent)
+        }
+
+        .hdr-actions {
+            display: flex;
+            gap: 10px
+        }
+
+        .hdr-btn {
+            background: rgba(0, 217, 255, .12);
+            border: 1px solid rgba(0, 217, 255, .25);
+            color: var(--accent);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: .05em;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .hdr-btn:hover {
+            background: rgba(0, 217, 255, .22)
+        }
+
+        /* ── NAV TABS ── */
+        .sector-nav {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            background: var(--dark);
+            border-top: 1px solid rgba(0, 217, 255, .08);
+            overflow-x: auto;
+            scrollbar-width: none
+        }
+
+        .sector-nav::-webkit-scrollbar {
+            display: none
+        }
+
+        .snav-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 11px;
+            color: rgba(255, 255, 255, .5);
+            background: transparent;
+            border: none;
+            padding: 10px 32px;
+            cursor: pointer;
+            white-space: nowrap;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            border-bottom: 3px solid transparent;
+            transition: all .2s
+        }
+
+        .snav-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent)
+        }
+
+        .snav-btn:hover {
+            color: rgba(255, 255, 255, .85)
+        }
+
+        /* ── PAGES ── */
+        .sector-page {
+            display: none;
+            padding: 28px 36px
+        }
+
+        .sector-page.active {
+            display: block
+        }
+
+        .pg-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--dark);
+            margin-bottom: 4px
+        }
+
+        .pg-sub {
+            font-size: 12px;
+            color: var(--soft);
+            margin-bottom: 24px
+        }
+
+        /* ── CADEIA DE VALOR — nodes clicáveis ── */
+        .cnode-flow {
+            display: flex;
+            align-items: stretch;
+            overflow-x: auto;
+            gap: 0;
+            padding-bottom: 8px;
+            margin-bottom: 28px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(26, 62, 114, .3) transparent
+        }
+
+        .cnode {
+            flex-shrink: 0;
+            min-width: 112px;
+            max-width: 135px;
+            background: var(--white);
+            border: 1px solid rgba(26, 62, 114, .18);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 14px 10px;
+            cursor: pointer;
+            transition: background .15s, border-color .15s
+        }
+
+        .cnode:hover {
+            background: rgba(26, 62, 114, .05)
+        }
+
+        .cnode.cnode-active {
+            background: var(--primary);
+            border-color: var(--primary)
+        }
+
+        .cnode.cnode-active .cnode-step,
+        .cnode.cnode-active .cnode-name,
+        .cnode.cnode-active .cnode-resp {
+            color: var(--white)
+        }
+
+        .cnode.cnode-active .cnode-count {
+            background: rgba(0, 217, 255, .2);
+            color: var(--accent)
+        }
+
+        .cnode-arrow {
+            flex-shrink: 0;
+            width: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--soft);
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(26, 62, 114, .05);
+            border-top: 1px solid rgba(26, 62, 114, .1);
+            border-bottom: 1px solid rgba(26, 62, 114, .1)
+        }
+
+        .cnode-step {
+            font-family: 'Poppins', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            margin-bottom: 6px
+        }
+
+        .cnode-icon {
+            font-size: 20px;
+            margin-bottom: 6px
+        }
+
+        .cnode-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            color: var(--txt);
+            text-align: center;
+            margin-bottom: 4px
+        }
+
+        .cnode-resp {
+            font-size: 9px;
+            color: var(--soft);
+            text-align: center;
+            margin-bottom: 8px;
+            line-height: 1.3
+        }
+
+        .cnode-count {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(26, 62, 114, .08);
+            padding: 2px 8px;
+            border-radius: 10px
+        }
+
+        /* ── SETOR DETALHE ── */
+        .sdet-card {
+            background: var(--white);
+            border: 1px solid rgba(26, 62, 114, .12);
+            border-radius: 6px;
+            overflow: hidden
+        }
+
+        .sdet-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            padding: 20px 24px;
+            background: var(--primary);
+            align-items: start
+        }
+
+        .sdet-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            color: #fff;
+            margin-bottom: 4px
+        }
+
+        .sdet-resp {
+            font-size: 11px;
+            color: rgba(255, 255, 255, .65);
+            line-height: 1.5
+        }
+
+        .sdet-stats {
+            display: flex;
+            gap: 16px
+        }
+
+        .sdet-stat {
+            text-align: center
+        }
+
+        .sdet-stat-n {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 26px;
+            color: var(--accent)
+        }
+
+        .sdet-stat-l {
+            font-size: 9px;
+            color: rgba(255, 255, 255, .5);
+            text-transform: uppercase;
+            letter-spacing: .06em
+        }
+
+        .sdet-sistemas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 14px 24px;
+            border-bottom: 1px solid rgba(26, 62, 114, .08);
+            background: rgba(26, 62, 114, .02)
+        }
+
+        /* ── SYS CHIPS ── */
+        .sys-chip {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--txt);
+            background: var(--white);
+            border: 1px solid rgba(26, 62, 114, .15);
+            border-radius: 20px;
+            padding: 3px 10px
+        }
+
+        .sys-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0
+        }
+
+        .sys-dot.ok {
+            background: var(--ok)
+        }
+
+        .sys-dot.lim {
+            background: var(--warn)
+        }
+
+        .sys-dot.aus {
+            background: var(--crit)
+        }
+
+        /* ── PROC TABLE ── */
+        .proc-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px
+        }
+
+        .proc-table thead th {
+            background: rgba(26, 62, 114, .06);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--primary);
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 2px solid rgba(26, 62, 114, .12)
+        }
+
+        .proc-table tbody td {
+            padding: 11px 12px;
+            vertical-align: top;
+            border-bottom: 1px solid rgba(26, 62, 114, .06);
+            line-height: 1.55;
+            color: var(--txt)
+        }
+
+        .proc-table tbody tr:last-child td {
+            border-bottom: none
+        }
+
+        .proc-table tbody tr:hover td {
+            background: rgba(26, 62, 114, .02)
+        }
+
+        .col-num {
+            width: 52px
+        }
+
+        .col-etapa {
+            width: 200px
+        }
+
+        .col-ent,
+        .col-sai {
+            width: 200px
+        }
+
+        .col-sys {
+            width: 260px
+        }
+
+        .proc-num {
+            display: inline-block;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            color: var(--white);
+            background: var(--primary);
+            padding: 2px 7px;
+            border-radius: 3px
+        }
+
+        .proc-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--dark);
+            margin-bottom: 2px
+        }
+
+        .proc-resp {
+            font-size: 10px;
+            color: var(--soft);
+            font-style: italic
+        }
+
+        .proc-obs {
+            margin-top: 6px;
+            padding: 6px 8px;
+            background: rgba(180, 83, 9, .07);
+            border-left: 2px solid var(--warn);
+            border-radius: 0 3px 3px 0;
+            font-size: 10px;
+            color: var(--warn);
+            line-height: 1.5
+        }
+
+        .proc-gap {
+            margin-top: 6px;
+            padding: 6px 8px;
+            background: rgba(185, 28, 28, .07);
+            border-left: 2px solid var(--crit);
+            border-radius: 0 3px 3px 0;
+            font-size: 10px;
+            color: var(--crit);
+            line-height: 1.5
+        }
+
+        /* ── MAPA DE OPORTUNIDADES ── */
+        .mapa-kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px
+        }
+
+        .mapa-kpi {
+            background: var(--white);
+            border: 1px solid rgba(26, 62, 114, .12);
+            border-radius: 6px;
+            padding: 16px 18px;
+            border-left: 3px solid var(--primary)
+        }
+
+        .mapa-kpi-n {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            margin-bottom: 2px
+        }
+
+        .mapa-kpi-l {
+            font-size: 11px;
+            color: var(--soft)
+        }
+
+        .mop-group {
+            margin-bottom: 28px
+        }
+
+        .mop-group-hdr {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid currentColor
+        }
+
+        .mop-group-badge {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 3px
+        }
+
+        .mop-group-desc {
+            font-size: 11px;
+            color: var(--soft);
+            font-style: italic
+        }
+
+        .mop-group-count {
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: auto
+        }
+
+        .mop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .mop-item {
+            background: var(--white);
+            border: 1px solid rgba(26, 62, 114, .1);
+            border-radius: 6px;
+            overflow: hidden
+        }
+
+        .mop-item-hdr {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background .15s;
+            user-select: none
+        }
+
+        .mop-item-hdr:hover {
+            background: rgba(26, 62, 114, .03)
+        }
+
+        .mop-item.open .mop-item-hdr {
+            border-bottom: 1px solid rgba(26, 62, 114, .08)
+        }
+
+        .mop-setor-badge {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(26, 62, 114, .08);
+            border-radius: 3px;
+            padding: 2px 7px;
+            white-space: nowrap
+        }
+
+        .mop-proc-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--dark);
+            flex: 1
+        }
+
+        .mop-item-right {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .mop-impacto,
+        .mop-complex {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px
+        }
+
+        .mop-chevron {
+            font-size: 12px;
+            color: var(--soft);
+            transition: transform .25s
+        }
+
+        .mop-item.open .mop-chevron {
+            transform: rotate(180deg)
+        }
+
+        .mop-detail {
+            display: none;
+            padding: 16px;
+            background: rgba(26, 62, 114, .01)
+        }
+
+        .mop-item.open .mop-detail {
+            display: block
+        }
+
+        .mop-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 14px
+        }
+
+        .mop-det-lbl {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--soft);
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: 4px
+        }
+
+        .mop-det-txt {
+            font-size: 12px;
+            color: var(--txt);
+            line-height: 1.65
+        }
+
+        .mop-just {
+            background: rgba(0, 217, 255, .07);
+            border-left: 2px solid var(--accent);
+            padding: 8px 10px;
+            border-radius: 0 3px 3px 0;
+            font-style: italic;
+            font-size: 11px;
+            color: var(--soft)
+        }
+
+        .mop-det-footer {
+            display: flex;
+            gap: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(26, 62, 114, .08)
+        }
+
+        .roi-tag {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 10px
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--dark);
+            padding: 13px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .ft {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: rgba(255, 255, 255, .4)
+        }
+
+        /* ── MODAL ── */
+        .modal-ov {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 37, 71, .65);
+            z-index: 999;
+            align-items: center;
+            justify-content: center
+        }
+
+        .modal-ov.open {
+            display: flex
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: 6px;
+            padding: 28px;
+            max-width: 460px;
+            width: 90%
+        }
+
+        .modal-t {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--dark);
+            margin-bottom: 12px
+        }
+
+        .modal-b {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: var(--txt);
+            line-height: 1.7;
+            margin-bottom: 18px
+        }
+
+        .modal-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 9px 22px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer
+        }
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:900px) {
+            .mapa-kpis {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .mop-detail-grid {
+                grid-template-columns: 1fr
+            }
+
+            .mop-item-right {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 6px
+            }
+
+            .sdet-header {
+                grid-template-columns: 1fr
+            }
+
+            .hdr-title {
+                display: none
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-  <header class="hdr">
-    <div class="hdr-row">
-      <div>
-        <div class="brand">TECNASA</div>
-        <div class="brand-sub">Consultoria em Gestão Empresarial</div>
-      </div>
-      <div class="hdr-title">
-        <b>Safety Cirúrgica — OPME &amp; Distribuição Médica</b> — Benchmark de Processos por Setor
-      </div>
-      <button class="btn-exp" onclick="openModal()">⬇ Exportar</button>
+    <header class="hdr">
+        <div class="hdr-row">
+            <div>
+                <div class="brand">TECNASA</div>
+                <div class="brand-sub">Consultoria em Gestão Empresarial</div>
+            </div>
+            <div class="hdr-title">
+                <b>Safety Cirúrgica</b> — Diagnóstico de Processos (AS-IS)
+            </div>
+            <div class="hdr-actions">
+                <button class="hdr-btn" onclick="openModal()">⬇ Exportar PDF</button>
+            </div>
+        </div>
+        <nav class="sector-nav" id="sector-nav"></nav>
+    </header>
+
+    <div id="sector-pages"></div>
+
+    <footer>
+        <div class="ft">TECNASA Consultoria | Diagnóstico de Processos — Safety Cirúrgica</div>
+        <div class="ft" id="gen-date"></div>
+        <div class="ft">Confidencial — uso interno</div>
+    </footer>
+
+    <div class="modal-ov" id="mo">
+        <div class="modal">
+            <div class="modal-t">Exportar Relatório</div>
+            <div class="modal-b">
+                Para salvar como PDF:<br><br>
+                1. Pressione <strong>Ctrl+P</strong> (Win) / <strong>Cmd+P</strong> (Mac)<br>
+                2. Selecione <strong>Salvar como PDF</strong><br>
+                3. Configure para <strong>Paisagem</strong> e margens <strong>Mínimas</strong><br>
+                4. Clique em Salvar<br><br>
+                <em>Recomendado: exportar uma aba por vez.</em>
+            </div>
+            <button class="modal-btn" onclick="closeModal()">Entendido</button>
+        </div>
     </div>
-    <nav class="sector-nav" id="sector-nav"></nav>
-  </header>
 
-  <div id="sector-pages"></div>
+    <script>
+        /* ══════════════════════════════════════════════════════════════
+           DATA — SAFETY CIRÚRGICA
+           Fonte: transcrições de entrevistas (mai–jul/2026)
+           Consultoria: TECNASA
+        ══════════════════════════════════════════════════════════════ */
 
-  <footer>
-    <div class="ft">TECNASA Consultoria | Benchmark de Processos — Safety Cirúrgica</div>
-    <div class="ft" id="gen-date"></div>
-    <div class="ft">Confidencial — uso interno</div>
-  </footer>
+        const CADEIA = [
 
-  <!-- MODAL EXPORTAR -->
-  <div class="modal-ov" id="mo">
-    <div class="modal">
-      <div class="modal-t">Exportar Relatório</div>
-      <div class="modal-b">
-        Para salvar como PDF:<br><br>
-        1. Pressione <strong>Ctrl+P</strong> (Win) / <strong>Cmd+P</strong> (Mac)<br>
-        2. Selecione <strong>Salvar como PDF</strong><br>
-        3. Configure para <strong>Paisagem</strong> e margens <strong>Mínimas</strong><br>
-        4. Clique em Salvar<br><br>
-        <em>Recomendado: exportar um setor por vez para melhor legibilidade.</em>
+            /* ── 1. COORDENAÇÃO COMERCIAL (GISLAINE) ── */
+            {
+                id: 'coord', nome: 'Coord. Comercial', icon: '🗂️',
+                responsavel: 'Gislaine Ferreira (Coord.) · Equipe: Duda, Magda, Cláudia, Gabriel, Thays, Analice',
+                sistemas: [
+                    { n: 'Estoquei (ERP)', e: 'lim' },
+                    { n: 'Planilha de Agenda (Excel)', e: 'lim' },
+                    { n: 'Portais OPME (Reviot, Bionexo, Inpart…)', e: 'lim' },
+                    { n: 'WhatsApp (grupos operacionais)', e: 'lim' },
+                    { n: 'Safety Log (logística)', e: 'ok' }
+                ],
+                processos: [
+                    {
+                        num: '1.1', nome: 'Gestão de Agenda e Escala de Cirurgias',
+                        resp: 'Gislaine + Magda (lançamento)',
+                        entrada: 'Solicitações de cirurgia por e-mail e WhatsApp de hospitais e representantes externos',
+                        saida: 'Planilha de agenda atualizada; print disparado no grupo WhatsApp operacional; remessa emitida no Estoquei; material liberado para Safety Log',
+                        sistema: 'Estoquei (emissão de remessa) + Excel (agenda) + WhatsApp (comunicação)',
+                        obs: 'ℹ Gislaine opera de 6h até a noite. Qualquer alteração (suspensão, cancelamento, mudança de horário) gera novo print e novo disparo. Conhecimento de equipamentos e peças de mão (30+ equip., 60+ peças) está majoritariamente memorizado por ela.',
+                        gap: '⚠ Gap de mercado: sistemas OPME (GTPlan) centralizam agenda com status em tempo real — eliminariam o modelo de print no WhatsApp.'
+                    },
+                    {
+                        num: '1.2', nome: 'Controle de Consignados Eletivos (CCP)',
+                        resp: 'Gislaine',
+                        entrada: 'Comunicado de uso pós-procedimento do hospital (e-mail ou WhatsApp)',
+                        saida: 'Uso amarrado ao paciente no Estoquei; saldo atualizado; NF emitida e enviada ao cliente; reposição avaliada e nova remessa emitida quando necessário',
+                        sistema: 'Estoquei (100% via sistema desde jun/2026)',
+                        obs: 'ℹ Ponto cego identificado: no intervalo entre a saída do material para o hospital e o retorno físico, o sistema perde a rastreabilidade do item.'
+                    },
+                    {
+                        num: '1.3', nome: 'Controle de Consignados Permanentes (Cardiologia/Abbott)',
+                        resp: 'Gislaine (herdou de Adriana em jun/2026) · 5 estados: PE, RN, CE, PB, AL',
+                        entrada: 'Arquivos de uso enviados pelos hospitais (e-mail, portais, WhatsApp) — chegam misturados com outros fornecedores (60-80 pág.)',
+                        saida: 'Itens filtrados; uso amarrado ao paciente no Estoquei; cotação pré ou pós lançada nos portais; NF emitida e enviada',
+                        sistema: 'Estoquei + portais hospitalares (Reviot, Bionexo, Inpart, Emparte, Síntese, Apoio)',
+                        obs: 'ℹ Controles especiais: Português (envio dia 10/mês), Unimed Natal (só e-mail), Unimed Fortaleza (CNPJ duplo + estoque físico), Unimed Recife (arquivo filtrado). Lote não exporta no formato dos portais — inserção manual em cada cotação pós.',
+                        gap: '⚠ Lote não exporta no formato dos portais — pendência Estoquei #3 (Fase 1 crítica).'
+                    },
+                    {
+                        num: '1.4', nome: 'Controle de Equipamentos e Calibrações',
+                        resp: 'Gislaine',
+                        entrada: 'Movimentação de equipamentos em campo (30+ equipamentos, 60+ peças de mão)',
+                        saida: 'Planilha de localização atualizada; calibrações monitoradas; protocolo de entrega/devolução emitido para técnico',
+                        sistema: 'Planilha Excel própria (sem integração com Estoquei)',
+                        obs: 'ℹ Calibração anual por equipamento — datas monitoradas manualmente sem alerta automático. Risco de equipamento em campo com calibração vencida.'
+                    },
+                    {
+                        num: '1.5', nome: 'Rastreabilidade PB — Cirurgia Geral',
+                        resp: 'Cláudia (operação) · Gislaine (supervisão)',
+                        entrada: 'Portal Unimed JP — cotações abertas diariamente',
+                        saida: 'Cotação respondida no portal; registro na planilha de rastreabilidade; autorização comunicada ao gerente Lauro/representante',
+                        sistema: 'Portal Unimed JP + planilha Excel (2 abas: Cotações e Autorizações)',
+                        obs: 'ℹ Volume: ~1.838 cotações desde nov/2024. 305 autorizações sem status definido atualmente — risco de perder cirurgias agendadas sem acompanhamento.'
+                    },
+                    {
+                        num: '1.6', nome: 'Fechamento de Comissões',
+                        resp: 'Gislaine (relatório de vendas) → Shirleane (cálculo)',
+                        entrada: 'Relatório de vendas extraído do Estoquei por representante',
+                        saida: 'Relatório enviado ao financeiro; comissão da empresa Meta conferida e encaminhada para aprovação de Thulio',
+                        sistema: 'Estoquei (extração) + Excel (organização por representante)',
+                        obs: 'ℹ Carteira de representantes ampliada pós-saída de Adriana (jun/2026). Comissão é calculada sobre o valor recebido, não sobre o faturado — exige cruzamento com financeiro.'
+                    }
+                ]
+            },
+
+            /* ── 2. COMERCIAL EXTERNO (GERÊNCIA) ── */
+            {
+                id: 'comercial', nome: 'Comercial — Gerência', icon: '💼',
+                responsavel: 'Ricardo Ciarlini · Edilma Paes · Lauro Ferreira · Roberto de Barros',
+                sistemas: [
+                    { n: 'Estoquei (relatórios)', e: 'lim' },
+                    { n: 'WhatsApp (grupos por estado)', e: 'lim' },
+                    { n: 'CRM / carteira de clientes', e: 'aus' },
+                    { n: 'V Expense (despesas)', e: 'ok' }
+                ],
+                processos: [
+                    {
+                        num: '2.1', nome: 'Gestão de Representantes Externos (PJ)',
+                        resp: 'Ricardo + Edilma (Cardiologia/TAVI) · Lauro (Cirurgia Geral/PB)',
+                        entrada: 'Relatórios de uso, pendências de consignado e inadimplência por representante',
+                        saida: 'Feedback individual ao representante; ações comerciais definidas; plano de ação da semana',
+                        sistema: 'Estoquei (acesso direto ao relatório) + WhatsApp + reuniões quinzenais recém-implementadas',
+                        obs: 'ℹ Representantes são PJ sem exclusividade — cuidado no trato para não configurar vínculo. Empresa está na 3ª turma de representantes em Recife desde ago/2025. Alta rotatividade compromete o relacionamento médico.',
+                        gap: '⚠ Ausência de CRM: carteira controlada por memória dos gerentes. Edilma criou planilha de mapeamento de clientes com adesão praticamente nula pelos representantes.'
+                    },
+                    {
+                        num: '2.2', nome: 'Acompanhamento de Consignados e Inadimplência',
+                        resp: 'Ricardo + Edilma · coordenação com financeiro (Alan)',
+                        entrada: 'Relatório de inadimplência do financeiro (Alan) e relatório de consignado do Estoquei',
+                        saida: 'Ação de cobrança definida; representante acionado; prazo negociado',
+                        sistema: 'Estoquei (relatório direto)',
+                        obs: 'ℹ 95% das pendências de inadimplência são resolvidas exclusivamente pelo financeiro — o comercial engajou pouco historicamente. Melhora recente identificada com início dos ritos de reunião (jul/2026).'
+                    },
+                    {
+                        num: '2.3', nome: 'Ritos de Reunião (implantados pela Tecnasa)',
+                        resp: 'Thulio (semanal com gestores) · Gerentes (quinzenal com representantes) · 1-para-1 quinzenal',
+                        entrada: 'Dados de resultado, inadimplência, consignado e oportunidades do período',
+                        saida: 'Plano de ação semanal; compromissos individuais por representante; feedbacks documentados',
+                        sistema: 'WhatsApp (atual) — Microsoft Teams em implantação (decisão da reunião semestral jul/2026)',
+                        obs: 'ℹ Primeira reunião semestral realizada em jul/2026. Crescimento de 37% em reais comparando 5 meses de 2025 com 6 meses de 2026. Pautas definidas: inadimplência, consignados e oportunidades.'
+                    },
+                    {
+                        num: '2.4', nome: 'Convencimento Técnico Médico (Linha Abbott/Coronária)',
+                        resp: 'Ricardo (maior domínio técnico em Coronária/CRM)',
+                        entrada: 'Autorização de cotação ou indicação de procedimento pelo médico',
+                        saida: 'Médico convencido a usar o material consignado da Safety; data de cirurgia confirmada ao backoffice',
+                        sistema: 'Sem sistema — processo 100% relacional',
+                        obs: 'ℹ 90% do negócio Abbott é em caráter de consignação. Sucesso depende fortemente da capacidade pessoal de Ricardo e dos representantes — risco de concentração de conhecimento técnico.'
+                    }
+                ]
+            },
+
+            /* ── 3. VENDAS INTERNAS / SUPERVISÃO ── */
+            {
+                id: 'vendas', nome: 'Vendas Internas', icon: '🏢',
+                responsavel: 'Robson Joaquim (Supervisor Adm.) · Analice Aucélia (Licitação)',
+                sistemas: [
+                    { n: 'Estoquei (cotação e faturamento)', e: 'ok' },
+                    { n: 'Portais OPME (Síntese, Bionexo, Apoio)', e: 'lim' },
+                    { n: 'Força de Vendas / CRM', e: 'aus' }
+                ],
+                processos: [
+                    {
+                        num: '3.1', nome: 'Monitoramento e Cotação em Portais',
+                        resp: 'Robson',
+                        entrada: 'Portais Síntese, Bionexo e Apoio Cotações — verificação diária ao chegar',
+                        saida: 'Cotação respondida no portal; NF emitida do início ao fim por Robson sem depender de outra área',
+                        sistema: 'Estoquei (faturamento completo) + portais OPME',
+                        obs: 'ℹ Robson realiza o ciclo completo sozinho: cotação → venda → faturamento. Foco em linha Abbott/Hemodinâmica (acessórios de grande volume direto). Recentemente passou a realizar visitas externas a clientes.'
+                    },
+                    {
+                        num: '3.2', nome: 'Compras e Importação da Linha Hemodinâmica',
+                        resp: 'Robson',
+                        entrada: 'Demanda de venda direta identificada nos portais; ruptura de item específico',
+                        saida: 'Pedido fechado com fornecedor nacional ou internacional; mercadoria em trânsito monitorada',
+                        sistema: 'Compra sob demanda — sem cobertura longa de estoque (modelo "chegou, saiu")',
+                        obs: 'ℹ Robson tem autonomia para aprovar compras destinadas a venda direta sem aprovação de Thulio. Realizou 3 importações em 2025, nenhuma em 2026. Cargo de Supervisor sem liderados — escopo em formalização pela Tecnasa.',
+                        gap: '⚠ Ausência de indicadores de performance — Robson afirmou desejar ser cobrado por métricas, mas hoje não existe nenhum parâmetro formal.'
+                    },
+                    {
+                        num: '3.3', nome: 'Licitações',
+                        resp: 'Analice Aucélia (execução) · Robson (supervisão e implantação)',
+                        entrada: 'Edital identificado e aprovado para participação',
+                        saida: 'Proposta montada e enviada; resultado acompanhado; pós-ganho documentado e faturado',
+                        sistema: 'Processo implantado por Robson — POP em elaboração pela Tecnasa',
+                        obs: 'ℹ Volume de licitações atual é baixo. Analice executa seguindo o processo de Robson, sem documentação formal ainda.'
+                    }
+                ]
+            },
+
+            /* ── 4. COMPRAS ── */
+            {
+                id: 'compras', nome: 'Compras', icon: '📦',
+                responsavel: 'Daniela Estelita (42 fornecedores) · Wilton (assistente — assume ago/2026)',
+                sistemas: [
+                    { n: 'Estoquei (análise de estoque)', e: 'lim' },
+                    { n: 'Excel (sugestão de compra)', e: 'lim' },
+                    { n: 'Agenda física (pedidos em trânsito)', e: 'lim' },
+                    { n: 'Templates Medtronic/Abbott', e: 'lim' },
+                    { n: 'Sugestão automática de compra', e: 'aus' }
+                ],
+                processos: [
+                    {
+                        num: '4.1', nome: 'Análise de Estoque e Sugestão de Compra',
+                        resp: 'Daniela',
+                        entrada: 'Relatório de análise de estoque do Estoquei (qualidade considerada baixa) + base exportada para Excel',
+                        saida: 'Sugestão de compra calculada manualmente por fornecedor (cobertura: 60-90 dias padrão; 4-6 meses Medtronic)',
+                        sistema: 'Estoquei (extração) + Excel (recálculo manual da média de saída de 4-6 meses)',
+                        obs: 'ℹ 42 fornecedores ativos (35 OPME + 7 material de consumo). Daniela divide os fornecedores em grupos semanais para distribuir a carga. Recálculo manual consome ~2-3h por ciclo.',
+                        gap: '⚠ Divergência crítica confirmada: bases Safety Cirúrgica e Safety Log completamente dessincronizadas. Nunca foi feito inventário na base da Safety desde a entrada de Daniela (1 ano e 5 meses). Pré-requisito para qualquer automação futura.'
+                    },
+                    {
+                        num: '4.2', nome: 'Pedido para Fornecedores com Template (Medtronic/Abbott)',
+                        resp: 'Daniela',
+                        entrada: 'Sugestão de compra calculada; conversão de código Safety → código do fornecedor via planilha base',
+                        saida: 'Template preenchido com sellout, estoque, pedido e forecast; enviado ao fornecedor (2-3 pedidos/mês à Medtronic)',
+                        sistema: 'Template Excel do fornecedor — preenchimento 100% manual (2-3h por pedido da Medtronic, 300+ itens)',
+                        gap: '⚠ Gap de mercado: integração ERP-fornecedor eliminaria o preenchimento manual de templates — candidato prioritário de automação.'
+                    },
+                    {
+                        num: '4.3', nome: 'Acompanhamento de Pedidos em Trânsito',
+                        resp: 'Daniela',
+                        entrada: 'Pedido fechado com fornecedor (data prevista de faturamento e entrega acordada)',
+                        saida: 'Mercadoria recebida, conferida e com NF lançada no Estoquei; nota liberada para pagamento no financeiro',
+                        sistema: 'Agenda física (caderno/pasta) — sem controle sistêmico de pedidos em trânsito',
+                        obs: 'ℹ Problema recorrente: Safety Log recebe carga e demora para avisar Compras e dar entrada. Nota do dia 22 encontrada sem entrada uma semana depois. Necessário: aviso imediato de chegada + prazo máximo de 24-48h para entrada no sistema.',
+                        gap: '⚠ Sem vínculo pedido-NF no Estoquei — divergências de quantidade e preço passam despercebidas.'
+                    }
+                ]
+            },
+
+            /* ── 5. FINANCEIRO ── */
+            {
+                id: 'financeiro', nome: 'Financeiro', icon: '💰',
+                responsavel: 'Shirleane Araújo (Analista) · Alan (Auxiliar) · Meta Contábil (contabilidade/DP — terceirizada)',
+                sistemas: [
+                    { n: 'Estoquei (financeiro)', e: 'lim' },
+                    { n: 'Planilha Excel (controle paralelo)', e: 'lim' },
+                    { n: 'V Expense (despesas de viagem)', e: 'ok' },
+                    { n: 'Integração bancária automática', e: 'aus' },
+                    { n: 'Cálculo automático de comissões', e: 'aus' }
+                ],
+                processos: [
+                    {
+                        num: '5.1', nome: 'Contas a Pagar',
+                        resp: 'Shirleane',
+                        entrada: 'NFs de fornecedores (entrada automática via Estoquei); despesas internas (lançamento manual)',
+                        saida: 'Pagamento executado; baixa realizada no sistema; fluxo de caixa atualizado',
+                        sistema: 'Estoquei + planilha própria de fluxo de caixa (provisionamento manual a pedido de Thulio)',
+                        obs: 'ℹ Alçada de aprovação: Shirleane precisa de Thulio para qualquer pagamento, independente do valor — sem limite formalizado.'
+                    },
+                    {
+                        num: '5.2', nome: 'Conciliação Bancária',
+                        resp: 'Shirleane + Alan',
+                        entrada: 'Extrato bancário + relatório de baixas do Estoquei',
+                        saida: 'Conciliação do dia fechada; divergências registradas',
+                        sistema: 'Comparação manual entre duas telas (extrato e Estoquei)',
+                        obs: 'ℹ Workaround crítico: baixas parciais não aparecem no relatório diário do Estoquei. Para compensações de notas duplicadas, Shirleane lança com data de sábado/domingo para não sujar o relatório.',
+                        gap: '⚠ Pendência Estoquei #1 (Fase 1): corrigir baixa parcial e adicionar campo tipo de lançamento — elimina o workaround de datas de fim de semana.'
+                    },
+                    {
+                        num: '5.3', nome: 'Cobrança de Inadimplência',
+                        resp: 'Alan (execução principal) · Gerentes comerciais (suporte)',
+                        entrada: 'Títulos vencidos identificados na planilha de controle',
+                        saida: 'Cliente contatado; prazo renegociado ou escalado ao gerente; baixa realizada após pagamento',
+                        sistema: 'Planilha Excel de controle + WhatsApp (cobrança ativa)',
+                        obs: 'ℹ 30-40% do tempo diário de Alan vai para suporte informal via WhatsApp (representantes pedindo ajuda com notas, boletos, devoluções, aplicativos) — atividade não documentada. Melhora recente no engajamento do comercial com início dos ritos de reunião.',
+                        gap: '⚠ 95% das pendências historicamente resolvidas só pelo financeiro. Régua de cobrança estruturada em implantação: D+0 (lembrete) → D+7 (cobrança Alan) → D+15 (gerente) → D+30 (Thulio).'
+                    },
+                    {
+                        num: '5.4', nome: 'Fechamento de Comissões',
+                        resp: 'Shirleane',
+                        entrada: 'Relatório de vendas das coordenadoras + devolutiva de pagamentos do Estoquei',
+                        saida: 'Comissão calculada por representante (2% sobre recebido); paga até dia 10',
+                        sistema: 'Cruzamento manual nota por nota entre relatório do sistema e planilha de controle (duas telas)',
+                        obs: 'ℹ Maior consumo de tempo do setor: Shirleane passa horas cruzando manualmente. Agravante: algumas notas saem sem nome do representante mesmo com bloqueio configurado.',
+                        gap: '⚠ Pendência Estoquei #2 e #7: corrigir vínculo de representante e automatizar cálculo de comissão sobre baixas financeiras.'
+                    },
+                    {
+                        num: '5.5', nome: 'Gestão de Viagens e Despesas (Alan)',
+                        resp: 'Alan',
+                        entrada: 'Solicitação de viagem de representante ou gerente',
+                        saida: 'Passagem, hotel e locação cotados e reservados; despesas do V Expense revisadas e aprovadas',
+                        sistema: 'V Expense (app de despesas dos representantes) + busca manual de cotações',
+                        obs: 'ℹ Problema recorrente: reservas solicitadas em cima da hora encarecem passagens e locações. Política de antecedência mínima de 10 dias em formalização.'
+                    }
+                ]
+            },
+
+            /* ── 6. LOGÍSTICA / TÉCNICOS ── */
+            {
+                id: 'logistica', nome: 'Logística e Técnicos', icon: '🚚',
+                responsavel: 'Safety Log (logística) · Alexandre, Fernanda, Wellen (Enfermeiros de campo) · Meta Representações (freelancers CCP)',
+                sistemas: [
+                    { n: 'Estoquei (remessa e rastreio)', e: 'lim' },
+                    { n: 'Protocolo físico/WhatsApp (entrega)', e: 'lim' },
+                    { n: 'Protocolo digital de equipamentos', e: 'aus' },
+                    { n: 'Rastreio RFID/código de barras', e: 'aus' }
+                ],
+                processos: [
+                    {
+                        num: '6.1', nome: 'Entrega de Material Cirúrgico',
+                        resp: 'Safety Log (entrega) · Técnico de campo (acompanhamento)',
+                        entrada: 'Remessa liberada no Estoquei por Gislaine; rota planejada pela coordenação',
+                        saida: 'Material entregue no hospital; protocolo de entrega enviado via WhatsApp; técnico presente no procedimento',
+                        sistema: 'Estoquei (rastreio até saída) + protocolo físico/WhatsApp',
+                        obs: 'ℹ Técnicos acumulam logística + atendimento cirúrgico: retornos de Caruaru às 2h para cirurgias às 6h. Risco de segurança e qualidade — avaliação de logístico dedicado em andamento.',
+                        gap: '⚠ Ponto cego: sistema perde rastreabilidade do equipamento no intervalo entre saída para o hospital e retorno físico.'
+                    },
+                    {
+                        num: '6.2', nome: 'Recolhimento e Transferência Pós-Cirurgia',
+                        resp: 'Safety Log · Técnico de campo',
+                        entrada: 'Procedimento concluído; comunicação ao técnico ou logística para recolhimento',
+                        saida: 'Material recolhido; transferido para outro hospital ou devolvido à Safety',
+                        sistema: 'WhatsApp (coordenação) + protocolo físico',
+                        obs: 'ℹ SLA formal de comunicação entre Safety Log e áreas internas em implantação — hoje aviso de chegada de mercadoria depende de verificação pessoal de Daniela.'
+                    },
+                    {
+                        num: '6.3', nome: 'Gestão de Técnicos e Auxílios',
+                        resp: 'Gislaine (coordenação) · Thulio (aprovações)',
+                        entrada: 'Demandas dos técnicos (férias, faltas, auxílios, escala de final de semana)',
+                        saida: 'Demanda atendida; auxílio processado; escala ajustada',
+                        sistema: 'WhatsApp + decisão informal',
+                        obs: 'ℹ Auxílio combustível (R$500) e alimentação (R$500) defasados frente ao custo real de deslocamento. Contrato Meta Representações: 10% sobre realizado — herdado do início da empresa, sem revisão.'
+                    }
+                ]
+            }
+        ];
+
+        /* ══════════════════════════════════════════════════════════════
+           OPORTUNIDADES — MAPA
+        ══════════════════════════════════════════════════════════════ */
+        const OPORTUNIDADES = [
+
+            /* ── COORD. COMERCIAL ── */
+            {
+                id: 'op01', setor: 'Coord. Comercial', icone: '🗂️',
+                processo: 'Exportação de lote nos portais hospitalares',
+                problema: 'O Estoquei não exporta o lote no formato aceito pelos portais de cotação. A equipe insere o lote manualmente em cada cotação pós-procedimento — dezenas de vezes por semana.',
+                iniciativa: 'Correção no Estoquei (Fase 1 — Pendência #3): exportar lote já no formato alfanumérico exigido pelos portais, eliminando a inserção manual.',
+                beneficios: 'Eliminação de horas semanais de trabalho manual repetitivo; redução de erros de lote; faturamento mais rápido.',
+                roi: ['Operacional', 'Financeiro'],
+                justificativa: 'Pendência técnica do sistema — não requer mudança de processo. É a terceira correção mais urgente da lista de pendências do Estoquei e tem impacto direto no dia a dia de Gislaine e equipe.',
+                impacto: 'Alto', complexidade: 'Baixa',
+                dependencias: 'Abertura de chamado formal com Paulo (Estoquei) — pode ser iniciada imediatamente.'
+            },
+            {
+                id: 'op02', setor: 'Coord. Comercial', icone: '🗂️',
+                processo: 'Rastreabilidade de equipamentos e calibrações',
+                problema: 'Controle de localização de 30+ equipamentos e 60+ peças de mão feito em planilha manual sem alerta de calibração. Ponto cego no intervalo entre saída para o hospital e retorno físico.',
+                iniciativa: 'Implementar protocolo digital de entrega/devolução no Estoquei (vínculo técnico-equipamento-hospital-data) e alerta automático de calibração com 60 dias de antecedência.',
+                beneficios: 'Eliminação do ponto cego de rastreabilidade; redução do risco de equipamento vencido em campo; protocolo auditável.',
+                roi: ['Operacional', 'Estratégico'],
+                justificativa: 'Gislaine controla manualmente mais de 90 itens em campo com planilha própria. A digitalização elimina o risco de extravios e questionamentos hospitalares por calibração vencida.',
+                impacto: 'Alto', complexidade: 'Média',
+                dependencias: 'Desenvolvimento no Estoquei (Fase 2 — Pendências #8 e #9).'
+            },
+            {
+                id: 'op03', setor: 'Coord. Comercial', icone: '🗂️',
+                processo: 'Redistribuição de escopo pós-Adriana',
+                problema: 'Gislaine absorveu 3 blocos de processo de Adriana (consignados permanentes 5 estados, comissões e controles especiais) sem redução de carga. Hoje coordena 10 pessoas, 5 estados, 7 portais e 7 blocos de processo.',
+                iniciativa: 'Avaliar e formalizar a redistribuição de escopo entre Gislaine e Glaucia. Mapear a carga real e ajustar equipe ou processos conforme necessário.',
+                beneficios: 'Redução do risco operacional de acúmulo em uma única pessoa; sustentabilidade do modelo de operação.',
+                roi: ['Operacional', 'Estratégico'],
+                justificativa: 'Situação temporária que se tornará permanente sem ação. O mapeamento AS-IS já revelou o volume real — agora é necessária a decisão de estrutura.',
+                impacto: 'Alto', complexidade: 'Média',
+                dependencias: 'POPs e controle de consignado implementados no Estoquei como pré-requisito.'
+            },
+
+            /* ── COMERCIAL ── */
+            {
+                id: 'op04', setor: 'Comercial — Gerência', icone: '💼',
+                processo: 'CRM e gestão de carteira de clientes',
+                problema: 'Não existe CRM. Carteira controlada por memória dos gerentes. Edilma criou planilha de mapeamento com adesão praticamente nula pelos representantes (precisam preencher fora do fluxo de trabalho).',
+                iniciativa: 'Implantar módulo de CRM no Estoquei (Fase 3 — Pendência #12): registro de clientes por representante, alerta de inatividade, visibilidade de pipeline e registro de visitas.',
+                beneficios: 'Visibilidade real da carteira; cobrança objetiva de positivação; histórico de relacionamento médico mesmo com troca de representante.',
+                roi: ['Comercial', 'Estratégico'],
+                justificativa: 'O cliente é da Safety, não do representante (sem exclusividade contratual). Um CRM garante que o relacionamento médico seja institucional, não pessoal — reduzindo o impacto da alta rotatividade de representantes.',
+                impacto: 'Alto', complexidade: 'Média',
+                dependencias: 'Carteira formalizada pelos gerentes; módulo de CRM no Estoquei.'
+            },
+            {
+                id: 'op05', setor: 'Comercial — Gerência', icone: '💼',
+                processo: 'Esquema de incentivo para representantes PJ',
+                problema: 'Representantes PJ sem exclusividade contratual resistem a planejamento de trabalho compartilhado. Cobrança direta gera conflito. A Safety está na 3ª turma de representantes em Recife desde ago/2025.',
+                iniciativa: 'Implementar Trade Marketing: campanhas de sell-out por linha, bonificação variável por meta atingida, premiação por positivação de carteira — engajamento via incentivo, não via coerção.',
+                beneficios: 'Maior engajamento de representantes; redução de rotatividade; aumento de volume por representante.',
+                roi: ['Comercial', 'Financeiro'],
+                justificativa: 'Decisão tomada na 1ª reunião semestral (jul/2026). É o caminho identificado pela gestão para engajar representantes PJ sem exclusividade dentro dos limites legais.',
+                impacto: 'Alto', complexidade: 'Média',
+                dependencias: 'Política de metas por representante definida; carteira formalizada.'
+            },
+
+            /* ── COMPRAS ── */
+            {
+                id: 'op06', setor: 'Compras', icone: '📦',
+                processo: 'Inventário e conciliação das bases Safety × Safety Log',
+                problema: 'Divergência confirmada por Daniela: bases completamente dessincronizadas. Ex: Safety Cirúrgica: 0 unidades de produto Abbott; Safety Log: 16 unidades do mesmo produto. Nunca foi feito inventário na base da Safety Cirúrgica em 1 ano e 5 meses.',
+                iniciativa: 'Realizar inventário físico na base da Safety Cirúrgica e conciliar com a Safety Log. Criar processo formal de atualização da base da Cirúrgica após cada inventário da Log.',
+                beneficios: 'Sugestões de compra baseadas em dados reais; eliminação de compras desnecessárias; visibilidade real do consignado em cliente.',
+                roi: ['Operacional', 'Financeiro'],
+                justificativa: 'Pré-requisito obrigatório para qualquer automação de compra. Sugestão automática baseada em dados incorretos é pior do que cálculo manual — o erro fica invisível.',
+                impacto: 'Alto', complexidade: 'Baixa',
+                dependencias: 'Acesso de Daniela ao sistema da Safety Log; coordenação com Bruno/Olavo.'
+            },
+            {
+                id: 'op07', setor: 'Compras', icone: '📦',
+                processo: 'Sugestão automática de compra por SKU',
+                problema: 'Daniela recalcula manualmente em Excel a sugestão de compra para 42 fornecedores — aproximadamente 2-3h por ciclo. Sem parâmetros no sistema, qualquer automação futura será imprecisa.',
+                iniciativa: 'Parametrizar estoque mínimo, ponto de pedido e lead time por SKU no Estoquei (Pendência #6). Após inventário conciliado, ativar sugestão automática (Pendência #10): sistema alerta Daniela quando SKU atinge o ponto crítico.',
+                beneficios: 'Eliminação do recálculo manual; compras baseadas em dados reais; liberação de Daniela para negociação estratégica.',
+                roi: ['Operacional', 'Financeiro'],
+                justificativa: 'Daniela já demonstra capacidade analítica e de negociação — o gargalo é o tempo gasto em recálculo manual que um sistema resolve em segundos.',
+                impacto: 'Alto', complexidade: 'Média',
+                dependencias: 'Inventário conciliado (op06) + parâmetros cadastrados no Estoquei (Pendência #6).'
+            },
+
+            /* ── FINANCEIRO ── */
+            {
+                id: 'op08', setor: 'Financeiro', icone: '💰',
+                processo: 'Cálculo automático de comissões',
+                problema: 'Shirleane passa horas cruzando nota por nota entre relatório do Estoquei e planilha de controle para fechar comissões. Agravante: notas saem sem nome do representante mesmo com bloqueio configurado — falha conhecida do sistema.',
+                iniciativa: 'Correção do vínculo de representante (Pendência Estoquei #2) + automação do cálculo de comissão sobre baixas financeiras (Pendência #7): sistema calcula 2% sobre recebido por representante automaticamente.',
+                beneficios: 'Eliminação do cruzamento manual no fechamento; comissão confiável e auditável; liberação de Shirleane para análise financeira.',
+                roi: ['Operacional', 'Financeiro'],
+                justificativa: 'É o maior gargalo de tempo isolado do setor financeiro. A solução é técnica e está mapeada — depende da correção prévia do vínculo de representante no Estoquei.',
+                impacto: 'Alto', complexidade: 'Média',
+                dependencias: 'Pendência Estoquei #2 (vínculo de representante) como pré-requisito.'
+            },
+            {
+                id: 'op09', setor: 'Financeiro', icone: '💰',
+                processo: 'Régua de cobrança estruturada',
+                problema: '95% das pendências de inadimplência eram resolvidas exclusivamente pelo financeiro, sem engajamento do comercial. Alan consume 30-40% do tempo em suporte informal via WhatsApp de representantes.',
+                iniciativa: 'Implementar régua formal: D+0 lembrete automático; D+7 cobrança ativa Alan; D+15 escalada ao gerente; D+30 escalada a Thulio. Mapear e estruturar o suporte informal via WhatsApp — definir o que Alan atende vs. o que vai para outro canal.',
+                beneficios: 'Maior engajamento do comercial na cobrança; liberação de tempo de Alan para atividades financeiras essenciais; inadimplência reduzida.',
+                roi: ['Financeiro', 'Operacional'],
+                justificativa: 'Melhora recente já observada (jul/2026) com início dos ritos de reunião. A régua formaliza o que está começando a funcionar informalmente.',
+                impacto: 'Alto', complexidade: 'Baixa',
+                dependencias: 'Processo de cobrança compartilhada definido com o comercial.'
+            },
+
+            /* ── LOGÍSTICA ── */
+            {
+                id: 'op10', setor: 'Logística e Técnicos', icone: '🚚',
+                processo: 'Separação da função logística dos técnicos de campo',
+                problema: 'Técnicos (Alexandre, Fernanda, Wellen) acumulam deslocamento de equipamentos com atendimento cirúrgico. Retornos de Caruaru às 2h da manhã para cirurgias às 6h comprometem qualidade e segurança.',
+                iniciativa: 'Avaliar contratação de logístico dedicado para movimentação de equipamentos, liberando os técnicos para foco exclusivo no atendimento cirúrgico.',
+                beneficios: 'Segurança e qualidade do atendimento técnico; redução do risco de incidentes por fadiga; melhor aproveitamento do conhecimento técnico dos enfermeiros.',
+                roi: ['Operacional', 'Estratégico'],
+                justificativa: 'Em distribuidoras de OPME mais maduras, a logística de equipamentos é terceirizada para operadores especializados. A Safety ainda acumula essa função nos técnicos por modelo histórico.',
+                impacto: 'Alto', complexidade: 'Média',
+                dependencias: 'Análise de viabilidade financeira com Thulio.'
+            }
+        ];
+
+        /* ══════════════════════════════════════════════════════════════
+           RENDER
+        ══════════════════════════════════════════════════════════════ */
+        const nav = document.getElementById('sector-nav');
+        const pages = document.getElementById('sector-pages');
+
+        /* ── helpers ── */
+        function sysChips(sistemas) {
+            return sistemas.map(s => {
+                const cls = { ok: 'ok', lim: 'lim', aus: 'aus' }[s.e];
+                const lbl = { ok: 'Adequado', lim: 'Limitado', aus: 'Ausente' }[s.e];
+                return `<div class="sys-chip"><div class="sys-dot ${cls}"></div>${s.n} <span style="font-size:9px;color:var(--soft);margin-left:2px">(${lbl})</span></div>`;
+            }).join('');
+        }
+
+        function procTableHtml(processos) {
+            const rows = processos.map(p => `
+    <tr>
+      <td class="col-num"><span class="proc-num">${p.num}</span></td>
+      <td class="col-etapa">
+        <div class="proc-name">${p.nome}</div>
+        <div class="proc-resp">${p.resp}</div>
+      </td>
+      <td class="col-ent">${p.entrada}</td>
+      <td class="col-sai">${p.saida}</td>
+      <td class="col-sys">
+        ${p.sistema}
+        ${p.obs ? `<div class="proc-obs">${p.obs}</div>` : ''}
+        ${p.gap ? `<div class="proc-gap">${p.gap}</div>` : ''}
+      </td>
+    </tr>`).join('');
+            return `<div style="overflow-x:auto">
+    <table class="proc-table">
+      <thead><tr>
+        <th class="col-num">#</th>
+        <th class="col-etapa">Etapa / Responsável</th>
+        <th class="col-ent">Entrada</th>
+        <th class="col-sai">Saída</th>
+        <th class="col-sys">Sistema + Observação</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+        }
+
+        /* ══ CADEIA DE VALOR ══ */
+        nav.insertAdjacentHTML('beforeend',
+            `<button class="snav-btn active" onclick="showCadeia(this)">🔗 Cadeia de Valor</button>`);
+        nav.insertAdjacentHTML('beforeend',
+            `<button class="snav-btn" onclick="gotoMapa(this)">🎯 Mapa de Oportunidades</button>`);
+
+        const nodesHtml = CADEIA.map((s, i) => {
+            const arrow = i < CADEIA.length - 1 ? `<div class="cnode-arrow">→</div>` : '';
+            return `
+    <div class="cnode" id="cnode-${s.id}" onclick="selectSector('${s.id}')">
+      <div class="cnode-step">Etapa ${i + 1}</div>
+      <div class="cnode-icon">${s.icon}</div>
+      <div class="cnode-name">${s.nome}</div>
+      <div class="cnode-resp">${s.responsavel.split('·')[0].trim().split('(')[0].trim()}</div>
+      <div class="cnode-count">${s.processos.length} processos</div>
+    </div>${arrow}`;
+        }).join('');
+
+        pages.insertAdjacentHTML('beforeend', `
+  <div class="sector-page active" id="sp-cadeia">
+    <div class="pg-title">Cadeia de Valor — Safety Cirúrgica</div>
+    <div class="pg-sub">Selecione um setor para ver seus processos, responsáveis, entradas e saídas</div>
+    <div class="cnode-flow">${nodesHtml}</div>
+    <div id="sector-detail-area"></div>
+  </div>`);
+
+        window.selectSector = function (id) {
+            document.querySelectorAll('.cnode').forEach(n => n.classList.remove('cnode-active'));
+            document.getElementById('cnode-' + id).classList.add('cnode-active');
+            const s = CADEIA.find(x => x.id === id);
+            const area = document.getElementById('sector-detail-area');
+            area.innerHTML = `
+    <div class="sdet-card">
+      <div class="sdet-header">
+        <div class="sdet-left">
+          <div class="sdet-name">${s.icon} ${s.nome}</div>
+          <div class="sdet-resp">${s.responsavel}</div>
+        </div>
+        <div class="sdet-stats">
+          <div class="sdet-stat">
+            <div class="sdet-stat-n">${s.processos.length}</div>
+            <div class="sdet-stat-l">Processos</div>
+          </div>
+          <div class="sdet-stat">
+            <div class="sdet-stat-n">${s.sistemas.length}</div>
+            <div class="sdet-stat-l">Sistemas</div>
+          </div>
+        </div>
       </div>
-      <button class="modal-btn" onclick="closeModal()">Entendido</button>
-    </div>
-  </div>
+      <div class="sdet-sistemas">${sysChips(s.sistemas)}</div>
+      ${procTableHtml(s.processos)}
+    </div>`;
+            setTimeout(() => area.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+        };
 
-  <script src="js/data.js"></script>
-  <script src="js/render.js"></script>
+        setTimeout(() => selectSector(CADEIA[0].id), 80);
+
+        /* ══ MAPA DE OPORTUNIDADES ══ */
+        pages.insertAdjacentHTML('beforeend', `<div class="sector-page" id="sp-mapa"></div>`);
+
+        function getPrioridade(op) {
+            if (op.impacto === 'Alto' && op.complexidade === 'Baixa') return 'P1';
+            if (op.impacto === 'Alto' && op.complexidade !== 'Baixa') return 'P2';
+            if (op.impacto === 'Médio' && op.complexidade === 'Baixa') return 'P3';
+            return 'P4';
+        }
+        const P_META = {
+            P1: { label: 'Quick Win', cor: '#15803D', desc: 'Alto impacto · Baixa complexidade · Implantação imediata' },
+            P2: { label: 'Projeto', cor: '#1A3E72', desc: 'Alto impacto · Requer planejamento e maior esforço' },
+            P3: { label: 'Melhoria', cor: '#B45309', desc: 'Impacto médio · Baixa complexidade · Próximo ciclo' },
+            P4: { label: 'Avaliar', cor: '#5a6a80', desc: 'Avaliar custo-benefício antes de priorizar' }
+        };
+        const ROI_COR = {
+            'Operacional': { bg: 'rgba(26,62,114,.1)', color: '#1A3E72' },
+            'Financeiro': { bg: 'rgba(21,128,61,.12)', color: '#15803D' },
+            'Estratégico': { bg: 'rgba(0,217,255,.15)', color: '#0369a1' },
+            'Comercial': { bg: 'rgba(180,83,9,.1)', color: '#92400e' }
+        };
+
+        function buildMapa() {
+            const container = document.getElementById('sp-mapa');
+            const grupos = { P1: [], P2: [], P3: [], P4: [] };
+            OPORTUNIDADES.forEach(op => grupos[getPrioridade(op)].push(op));
+
+            const roiCount = {};
+            OPORTUNIDADES.forEach(op => op.roi.forEach(r => roiCount[r] = (roiCount[r] || 0) + 1));
+
+            const kpisHtml = `
+    <div class="mapa-kpis">
+      <div class="mapa-kpi" style="border-left-color:var(--primary)">
+        <div class="mapa-kpi-n" style="color:var(--primary)">${OPORTUNIDADES.length}</div>
+        <div class="mapa-kpi-l">Oportunidades identificadas</div>
+      </div>
+      <div class="mapa-kpi" style="border-left-color:var(--ok)">
+        <div class="mapa-kpi-n" style="color:var(--ok)">${grupos.P1.length}</div>
+        <div class="mapa-kpi-l">Quick Wins (implantação imediata)</div>
+      </div>
+      <div class="mapa-kpi" style="border-left-color:var(--light)">
+        <div class="mapa-kpi-n" style="color:var(--light)">${grupos.P2.length}</div>
+        <div class="mapa-kpi-l">Projetos (alto impacto)</div>
+      </div>
+      <div class="mapa-kpi" style="border-left-color:var(--warn)">
+        <div class="mapa-kpi-n" style="color:var(--warn)">${grupos.P3.length + grupos.P4.length}</div>
+        <div class="mapa-kpi-l">Melhorias (próximo ciclo)</div>
+      </div>
+    </div>`;
+
+            const gruposHtml = Object.entries(grupos).map(([p, ops]) => {
+                if (!ops.length) return '';
+                const meta = P_META[p];
+                const itensHtml = ops.map(op => {
+                    const imp_bg = op.impacto === 'Alto' ? 'rgba(185,28,28,.1)' : op.impacto === 'Médio' ? 'rgba(180,83,9,.1)' : 'rgba(26,62,114,.08)';
+                    const imp_col = op.impacto === 'Alto' ? 'var(--crit)' : op.impacto === 'Médio' ? 'var(--warn)' : 'var(--soft)';
+                    const cmp_bg = op.complexidade === 'Baixa' ? 'rgba(21,128,61,.1)' : op.complexidade === 'Média' ? 'rgba(180,83,9,.1)' : 'rgba(185,28,28,.1)';
+                    const cmp_col = op.complexidade === 'Baixa' ? 'var(--ok)' : op.complexidade === 'Média' ? 'var(--warn)' : 'var(--crit)';
+                    const roiTags = op.roi.map(r => {
+                        const c = ROI_COR[r] || ROI_COR['Operacional'];
+                        return `<span class="roi-tag" style="background:${c.bg};color:${c.color}">${r}</span>`;
+                    }).join('');
+                    return `
+        <div class="mop-item" id="${op.id}">
+          <div class="mop-item-hdr" onclick="toggleMop('${op.id}')">
+            <span class="mop-setor-badge">${op.icone} ${op.setor}</span>
+            <span class="mop-proc-name">${op.processo}</span>
+            <div class="mop-item-right">
+              <span class="mop-impacto" style="background:${imp_bg};color:${imp_col}">Impacto ${op.impacto}</span>
+              <span class="mop-complex" style="background:${cmp_bg};color:${cmp_col}">Complexidade ${op.complexidade}</span>
+              <span class="mop-chevron">▼</span>
+            </div>
+          </div>
+          <div class="mop-detail">
+            <div class="mop-detail-grid">
+              <div>
+                <div class="mop-det-lbl">Problema identificado</div>
+                <div class="mop-det-txt">${op.problema}</div>
+              </div>
+              <div>
+                <div class="mop-det-lbl">Iniciativa proposta</div>
+                <div class="mop-det-txt">${op.iniciativa}</div>
+              </div>
+              <div>
+                <div class="mop-det-lbl">Benefícios esperados</div>
+                <div class="mop-det-txt">${op.beneficios}</div>
+              </div>
+              <div>
+                <div class="mop-det-lbl">Dependências</div>
+                <div class="mop-det-txt">${op.dependencias}</div>
+              </div>
+            </div>
+            <div class="mop-just">${op.justificativa}</div>
+            <div class="mop-det-footer">${roiTags}</div>
+          </div>
+        </div>`;
+                }).join('');
+                return `
+      <div class="mop-group">
+        <div class="mop-group-hdr" style="border-bottom-color:${meta.cor};color:${meta.cor}">
+          <span class="mop-group-badge" style="background:${meta.cor}">${p} — ${meta.label}</span>
+          <span class="mop-group-desc">${meta.desc}</span>
+          <span class="mop-group-count">${ops.length} iniciativa${ops.length > 1 ? 's' : ''}</span>
+        </div>
+        <div class="mop-list">${itensHtml}</div>
+      </div>`;
+            }).join('');
+
+            container.innerHTML = `
+    <div class="pg-title">🎯 Mapa de Oportunidades</div>
+    <div class="pg-sub">Iniciativas priorizadas por impacto × complexidade — Safety Cirúrgica | TECNASA, jul/2026</div>
+    ${kpisHtml}
+    ${gruposHtml}`;
+        }
+
+        window.toggleMop = function (id) {
+            document.getElementById(id).classList.toggle('open');
+        };
+
+        window.gotoMapa = function (btn) {
+            document.querySelectorAll('.snav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.sector-page').forEach(p => p.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            document.getElementById('sp-mapa').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.showCadeia = function (btn) {
+            document.querySelectorAll('.snav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.sector-page').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('sp-cadeia').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        buildMapa();
+
+        /* ── Modal ── */
+        window.openModal = () => document.getElementById('mo').classList.add('open');
+        window.closeModal = () => document.getElementById('mo').classList.remove('open');
+
+        /* ── Footer date ── */
+        document.getElementById('gen-date').textContent =
+            'Gerado em ' + new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+    </script>
 </body>
 
 </html>
