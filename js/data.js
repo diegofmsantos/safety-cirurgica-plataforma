@@ -1,294 +1,440 @@
 /* ═══════════════════════════════════════════════════════════════
-   DADOS REAIS — SAFETY CIRÚRGICA (OPME / DISTRIBUIÇÃO MÉDICA)
-   Benchmark processo a processo por setor
-   Fonte: 12 transcrições de entrevistas com gestores (mai–jun/2026)
+   DATA — SAFETY CIRÚRGICA
+   Fonte: transcrições de entrevistas (mai–jul/2026) +
+          validações AS-IS com Daniela (Compras), Shirleane e Alan
+          (Financeiro) — jul/2026
    Consultoria: TECNASA
 ═══════════════════════════════════════════════════════════════ */
 
-const SETORES = [
+const CADEIA = [
 
-/* ══════════ 1. COORDENAÇÃO COMERCIAL (BACKOFFICE) ══════════ */
-{
-  id: 'backoffice', nome: 'Coord. Comercial (Backoffice)',
-  responsavel: 'Gislaine (Linha Geral / Cabeça-Pescoço) + Glaucia (sucessora de Adriana — Linha Abbott / Cardiologia) | Analice (Licitação compartilhada)',
-  sistemas: [
-    { n: 'Estoquei (ERP)',        e: 'lim' },
-    { n: 'Planilhas Excel',       e: 'lim' },
-    { n: 'Portais hospitalares',  e: 'lim' },
-    { n: 'WhatsApp + E-mail',     e: 'lim' }
-  ],
-  processos: [
-    {
-      nome: 'Gestão de consignados e controle de uso',
-      pbf: 'Hospitais enviam arquivos (planilhas ou fotos) com uso de todos os fornecedores misturados. A coordenação filtra manualmente os itens da Safety, alimenta planilha Excel com paciente, material, lote, data, medida e médico. Linha Abbott: 90% consignado. Aprendiz executa parte da alimentação.',
-      gap: 'Processo 100% manual e passível de erro humano. Arquivo com 80 páginas de usos de outros fornecedores já consumiu um dia de trabalho de uma assistente sem encontrar nenhum item da Safety. Material vencido em clientes sem ação de remanejamento.',
-      mkt: 'Sistema lê automaticamente os arquivos de uso enviados pelos hospitais e filtra os itens do distribuidor. Saldo do consignado atualizado em tempo real. Alerta automático de material próximo ao vencimento com sugestão de remanejamento.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Faturamento: gestão de pendências vs. faturamento imediato',
-      pbf: 'Dois fluxos paralelos sem integração: faturamento imediato (uso recebido → fatura na hora) e pendências (entra em planilha Excel, aguarda condições). A coordenação controla tudo em planilha única que existe "desde o começo da empresa". Dentro do expediente, nota fiscal é entregue fisicamente na logística; fora do expediente, é enviada por e-mail.',
-      gap: 'Planilha de pendências nunca tem itens excluídos — só inseridos e atualizados. Risco crescente de erro com o volume. Falta de sistema integrado obriga dupla verificação manual. A logística frequentemente não encontra produtos que constam no sistema — produto "cai no lote errado".',
-      mkt: 'ERP registra os dois fluxos em tela unificada. Faturamento imediato gera NF automaticamente ao receber o uso. Pendências têm status visual (aguardando uso / aguardando lote / autorizado / faturado). NF transmitida digitalmente à logística sem necessidade de entrega física.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Cotação pré e pós-uso nos portais hospitalares',
-      pbf: 'Cotação pré (orçamento antes do procedimento) e pós (após o uso, com material real utilizado) são feitas via portais (Reviot, portal do Português, etc.). O sistema Estoquei não inclui o lote no campo de cotação pós — só tem o pré. Clientes exigem lote + ficha de sala no pós. Solução paliativa: cotação em Excel enviada por e-mail.',
-      gap: 'Clientes estão retendo pagamentos por não aceitar cotação pós sem lote. "Teve cliente que não quis considerar a cotação pós da gente." Ricardo e Edilma proíbem o envio de cotação em Excel, preferindo o modelo do sistema — que não tem o lote. Impasse paralisante.',
-      mkt: 'Sistema emite cotação pós com campo obrigatório de lote e evidência de uso (ficha de sala). Integração direta com portais hospitalares. Validação automática do formato exigido por cada portal antes do envio.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Resolução de divergências logísticas de lote',
-      pbf: 'Pedido lançado no Estoquei com saldo disponível no sistema, mas a logística não encontra o produto fisicamente. Coordenação desce fisicamente para a logística resolver. Paulo (diretoria) autoriza "outras entradas" no sistema para que o faturamento ocorra. Processo acontece com frequência às 18h–19h, exigindo que a coordenação trabalhe fora do horário.',
-      gap: 'Pedido de R$ 87.200 lançado às 10h, criticado às 19h. Coordenação sem tempo hábil para resolver dentro do expediente. Sem comunicação automática entre estoque e logística, o erro só é descoberto na separação física. Retrabalho diário que paralisa o faturamento.',
-      mkt: 'Sistema valida saldo físico no momento do lançamento do pedido. Alerta imediato de divergência entre saldo sistêmico e inventário físico. Logística recebe ordem de separação com localização de lote. Coordenação não é acionada para resolver o que é problema operacional da logística.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Sugestão comercial para compras da linha Abbott',
-      pbf: 'Fluxo de 3 etapas manuais: (1) Daniela (Compras) manda sugestão bruta → (2) Adriana/Glaucia atualiza com usos do dia anterior e manda de volta → (3) Daniela deduz consignados e emite pedido. Coordenação ainda adiciona uma terceira coluna de "sugestão comercial" com média ponderada dos últimos 6 meses por medida (balão e stent).',
-      gap: 'Sem comitê formal de compras: material parado há 90+ dias em clientes sem consumo continua sendo comprado. Representante que deveria sugerir o remanejamento não o faz. Já houve caso de precisar ir a Natal retirar 4 balões de um cliente para fechar um pedido de R$ 200k de outro.',
-      mkt: 'Módulo de gestão de consignados alimenta automaticamente a sugestão de compra, deduzindo o que está em campo. Comitê de compras mensal com dashboard de giro por cliente e representante. Remanejamento é proposta sistêmica antes de qualquer novo pedido ao fornecedor.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Comunicação dupla WhatsApp + E-mail',
-      pbf: 'Ricardo exige que tudo seja colocado nos grupos de WhatsApp. A coordenação também usa e-mail para o mesmo assunto. Resultado: cada cotação, cada uso recebido, cada planilha é enviada e respondida nos dois canais. "A gente manda no WhatsApp e no e-mail. A gente tem que responder nos dois."',
-      gap: 'Retrabalho diário de duplicação. Informações se perdem no histórico do WhatsApp. Planilha de pendências é enviada por e-mail, mas gerentes também pedem por WhatsApp. Sem canal único, auditar o que foi ou não comunicado é impossível.',
-      mkt: 'Canal único de comunicação operacional (e-mail ou plataforma integrada). WhatsApp restrito a urgências com protocolo definido. Planilhas e cotações acessíveis via sistema, sem necessidade de envio ativo.',
-      crit: 'media'
-    }
-  ],
-  impactos: [
-    { ic: '🗂️', t: 'Backoffice é o gargalo central da operação', b: 'Segundo Gislaine, <strong>70% ou mais das demandas da empresa chegam primeiro ao backoffice</strong>. Sem a coordenação operando, o faturamento para. A saída de Adriana representa risco real de perda de conhecimento crítico não documentado.' },
-    { ic: '⏰', t: 'Trabalho fora de horário como rotina', b: 'Divergências logísticas de lote são descobertas às 18h–19h. A coordenação trabalha fora do expediente para destravar pedidos. <strong>Pico de crise operacional diária no final do dia</strong> — não como exceção, mas como rotina.' },
-    { ic: '📋', t: 'Conhecimento crítico concentrado em uma pessoa', b: 'Adriana conhecia as particularidades de todos os clientes, medidas, prazos e regras de faturamento. <strong>Essa inteligência existia na cabeça dela, não no sistema.</strong> Transição sem documentação = risco de ruptura de relacionamento com clientes.' }
-  ]
-},
+  /* ════════════════════════════════════════
+     1. COMERCIAL / COORDENAÇÃO
+  ════════════════════════════════════════ */
+  {
+    id: 'coord', nome: 'Comercial / Coordenação', icon: '🏥',
+    responsavel: 'Gislaine Ferreira (Coord.) + Glaucia Fischer (venda direta) · equipe: Maria Eduarda, Magda, Cláudia, Thays, Analice, Luana + técnicos',
+    sistemas: [
+      { n: 'Estoquei — remessa e emissão de NF', e: 'lim' },
+      { n: 'Portais de OPME (Reviot, Bionexo, Inpart, Emparte, Apoio, Síntese)', e: 'lim' },
+      { n: 'Planilha de agenda de cirurgias', e: 'lim' },
+      { n: 'Controle de consignado por cliente', e: 'aus' },
+      { n: 'Rastreabilidade de equipamentos e calibração', e: 'aus' },
+      { n: 'WhatsApp (grupo operacional)', e: 'lim' }
+    ],
+    processos: [
+      {
+        num: '1.1', nome: 'Gestão de agenda e escala de cirurgias (Cabeça e Pescoço)',
+        resp: 'Gislaine + equipe de coordenação',
+        entrada: 'Solicitações de cirurgia por e-mail e WhatsApp; disponibilidade de técnicos, equipamentos e rota de deslocamento',
+        saida: 'Remessa emitida no Estoquei, técnico e equipamento designados, agenda lançada em planilha e print disparado no grupo operacional',
+        sistema: 'Estoquei (remessa) + planilha de agenda + WhatsApp — sem agenda cirúrgica integrada com status de pedido',
+        obs: 'A comunicação depende de print no WhatsApp a cada atualização e de planilha de agenda paralela ao sistema — sem visibilidade única de status como em plataformas de OPME (ex: GTPlan).'
+      },
+      {
+        num: '1.2', nome: 'Controle de consignados eletivos (vai e volta)',
+        resp: 'Gislaine',
+        entrada: 'Material temporário liberado para o procedimento; kits variáveis; autorização de convênio',
+        saida: 'Retorno do material monitorado; sobras tratadas; NF pós-procedimento emitida; reposição avaliada e acionamento de Compras em ruptura',
+        sistema: 'Estoquei — saldo consignado acompanhado manualmente; ponto cego no intervalo de devolução',
+        obs: 'O sistema não distingue formalmente material temporário (vai e volta) de permanente. O ponto cego na devolução exige cruzamento manual entre saldo do sistema e físico.'
+      },
+      {
+        num: '1.3', nome: 'Consignados permanentes — Cardiologia / Abbott (5 estados)',
+        resp: 'Gislaine (herdou de Adriana em jun/2026)',
+        entrada: 'Arquivos de uso enviados pelos hospitais (e-mail/portal, 60-80 páginas com múltiplos fornecedores); tabelas de preço pré-acordadas por convênio',
+        saida: 'Uso amarrado ao paciente no Estoquei; cotação pré e pós lançada nos portais com lote inserido manualmente; NF emitida após autorização',
+        sistema: 'Estoquei + portais — filtragem e amarração manual; lote inserido à mão em cada cotação pós',
+        obs: 'Controles especiais por cliente (Português dia 10, Unimed Natal/Recife/Fortaleza com CNPJ duplo). Materiais vencidos no cliente dependem de decisão caso a caso da diretoria. Conhecimento herdado de Adriana ainda não formalizado em POP.'
+      },
+      {
+        num: '1.4', nome: 'Controle de equipamentos e calibrações',
+        resp: 'Gislaine',
+        entrada: 'Movimentação de 30+ equipamentos e 60+ peças de mão em campo; datas de vencimento de calibração',
+        saida: 'Localização atualizada em planilha própria; calibração acionada junto às empresas responsáveis',
+        sistema: 'Planilha manual — sem alerta automático de vencimento e sem rastreabilidade sistêmica',
+        obs: 'Risco de equipamento em campo com calibração vencida (questionamento de hospital). Sem protocolo digital de entrega/devolução, a localização depende do controle manual de Gislaine.'
+      },
+      {
+        num: '1.5', nome: 'Supervisão de equipe e transição pós-saída de Adriana',
+        resp: 'Gislaine + Glaucia',
+        entrada: 'Saída de Adriana em 19/06/2026; redistribuição de escopo (consignado permanente → Gislaine; venda direta → Glaucia)',
+        saida: 'Equipe de analistas e técnicos coordenada; consignado permanente absorvido por Gislaine — carga de trabalho real em redimensionamento',
+        sistema: 'Estoquei + planilhas herdadas — conhecimento tácito de Adriana em processo de formalização',
+        obs: 'A saída de Adriana concentrou o consignado permanente (linha mais crítica) em Gislaine sem que os processos estivessem documentados. Transição precisa de POPs e possível reforço de equipe.'
+      }
+    ]
+  },
 
-/* ══════════ 2. GESTÃO COMERCIAL (GERÊNCIA) ══════════ */
-{
-  id: 'comerc', nome: 'Gestão Comercial',
-  responsavel: 'Ricardo (Gerente Comercial) + Edilma (Gerente Comercial) + Lauro (Gerente Comercial) | Representantes PJ externos por região',
-  sistemas: [
-    { n: 'Estoquei (ERP)',     e: 'lim' },
-    { n: 'WhatsApp (grupos)',  e: 'lim' },
-    { n: 'CRM',               e: 'aus' },
-    { n: 'Dashboard de metas',e: 'aus' }
-  ],
-  processos: [
-    {
-      nome: 'Gestão e acompanhamento de representantes',
-      pbf: 'Representantes são PJ externos. Gerentes acompanham por WhatsApp e ligações informais. Não existe carteira de clientes formalizada por representante. Gestores não sabem quais clientes estão inativos. Ricardo criou planilha de mapeamento de contatos (médicos, enfermeiros, financeiro por cliente), mas "ninguém faz".',
-      gap: 'Sem CRM, sem carteira definida, sem indicador de positivação. Gerentes não sabem o que o representante fez ou deixou de fazer. "A gente é tratado como CLT e não ganha como CLT" — falta de clareza sobre responsabilidades e métricas gera conflito constante.',
-      mkt: 'CRM com carteira definida por representante e região. Mapa de relacionamentos (médico, enfermeiro, compras) atualizado pelo próprio representante. Relatório semanal de positivação e visitas. Gerente acompanha painel — não liga para saber o que foi feito.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Alinhamento entre gerência e coordenação interna',
-      pbf: 'Adriana respondia diretamente a Túlio, não à gerência comercial. Processos de negociação, definição de produto e consignação eram iniciados pelos representantes com a coordenação, sem passar pelos gerentes. "Ela simplesmente, sem falar nada com a gente, vai lá e faz." Gerentes ficavam sabendo das negociações quando já estavam concluídas.',
-      gap: 'Falha organizacional reconhecida por Ricardo e Edilma como grave. Gerentes sem poder sobre a coordenação interna. Decisões de produto e preço tomadas sem alinhamento comercial. Sem integração, o planejamento de vendas é impossível.',
-      mkt: 'Hierarquia clara com reunião de alinhamento semanal entre gerência e coordenação. Toda negociação nova segue fluxo: representante → gerente → coordenação → Túlio (quando necessário). Plano de ataque por cliente compartilhado entre os três elos.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Acompanhamento de inadimplência pelos gerentes',
-      pbf: 'Financeiro (Alan) envia relatório de inadimplência por e-mail. Gerentes têm acesso ao sistema mas raramente atuam. O financeiro é responsável por 95% do retorno das cobranças — praticamente sozinho. "Falta empenho e engajamento por parte do time comercial e dos gerentes para pressionar os representantes."',
-      gap: 'Sem processo formal de cobrança pelo comercial, a inadimplência fica refém do financeiro. Representante PJ sem compromisso de cobrança. Gerente não vê como sua responsabilidade. Resultado: dívidas que se acumulam até o financeiro ter que escalar para Túlio.',
-      mkt: 'Gerentes acompanham painel de inadimplência por representante no início de cada semana. Fluxo de cobrança com responsabilidade definida: representante → gerente → financeiro → Túlio. SLA de cobrança com prazo máximo de X dias por faixa de atraso.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Gestão de consignado parado e remanejamento',
-      pbf: 'Representantes não realizam contagem de estoque consignado de forma proativa. Coordenação prepara planilha com estoque atualizado (saldo deduzido de usos pendentes) e envia ao representante antes da visita. Na chegada ao cliente, o representante encontra produtos que não estão na planilha por falha de registro. Materiais com 90+ dias sem giro não são retirados.',
-      gap: 'Ricardo já foi pressionado por Adriana para autorizar retiradas — e negou. Material vencido em clientes é o resultado. Já houve caso de precisar viajar a Natal para retirar 4 balões de um cliente para destravar um pedido de R$ 200k. "A conta, conta, reconta, vence. Ninguém toma decisão de nada."',
-      mkt: 'Painel de giro de consignados com semáforo por cliente e representante. Material acima de 60 dias sem uso gera alerta automático ao gerente. Aprovação de remanejamento via sistema, rastreável, sem dependência de WhatsApp ou ligação.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Metas, comissionamento e performance de representantes',
-      pbf: 'Metas existem (Túlio tem projeção de faturamento) mas não estão formalizadas por representante. Comissões são calculadas pelo financeiro com base no relatório de vendas enviado pela coordenação — processo sujeito a erros de atribuição de nota por representante. Representantes PJ não têm clareza sobre performance individual.',
-      gap: '"Tem nota que sai com nome errado de representante." Financeiro não confia no relatório do sistema para comissionar. Representantes descobrem comissão só no dia do pagamento. Sem meta visível, não há senso de urgência. "Eles são completamente despreocupados com o resultado."',
-      mkt: 'Dashboard de metas com realizado vs. planejado em tempo real por representante. Regras de comissão parametrizadas no sistema — resultado calculado automaticamente com base no faturamento baixado (recebido). Representante acompanha própria evolução sem precisar perguntar.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Ritos de gestão comercial',
-      pbf: 'Não existia rotina formal de reunião entre gerência e coordenação. Primeiro rito está sendo implementado pela TECNASA: reunião semanal/quinzenal de resultados entre Túlio, gerentes e coordenação. Até o início da consultoria, Ricardo e Edilma nunca tinham tido reunião de alinhamento entre eles com frequência definida.',
-      gap: 'Edilma chegou a marcar reunião de alinhamento bilateral com Ricardo duas vezes — ele cancelou as duas. Sem rito, cada gerente trabalha em silo. Decisões que deveriam ser coletivas são tomadas individualmente ou chegam direto a Túlio.',
-      mkt: 'Cadência de ritos estabelecida: reunião semanal de resultados (Túlio + gerentes, 20–30 min) + one-on-one quinzenal por gerente + reunião mensal de time completo com representantes de Recife. Pautas pré-definidas com template.',
-      crit: 'media'
-    }
-  ],
-  impactos: [
-    { ic: '🔗', t: 'Gerência e coordenação operam em silos opostos', b: 'A coordenação interna (backoffice) reportava diretamente a Túlio — não aos gerentes. <strong>Processos críticos de negociação, consignação e produto eram decididos sem a gerência comercial.</strong> Silo estrutural que compromete qualquer planejamento de vendas.' },
-    { ic: '📉', t: 'Inadimplência sem dono no comercial', b: 'O financeiro assume sozinho 95% do esforço de cobrança. <strong>Gerentes e representantes não se engajam.</strong> Sem responsabilidade clara no comercial, a inadimplência cresce sem contrapeso.' },
-    { ic: '🎯', t: 'Representantes sem meta visível e comissão com erro', b: 'Sem dashboard de metas e com comissão calculada manualmente (com risco de erro de atribuição), <strong>representantes não têm referência de performance.</strong> Resultado: desmotivação e ausência de urgência para fechar negócios.' }
-  ]
-},
+  /* ════════════════════════════════════════
+     2. COMERCIAL / GERÊNCIA
+  ════════════════════════════════════════ */
+  {
+    id: 'gerencia', nome: 'Comercial / Gerência', icon: '🤝',
+    responsavel: 'Ricardo Ciarlini + Edilma Paes (gestão compartilhada Abbott/TAVI) · Lauro Ferreira · Roberto de Barros (Gerentes) + representantes PJ',
+    sistemas: [
+      { n: 'Estoquei — consulta e acompanhamento', e: 'lim' },
+      { n: 'Planilha de mapeamento de clientes', e: 'lim' },
+      { n: 'CRM / carteira parametrizada por representante', e: 'aus' },
+      { n: 'Dashboard de indicadores comerciais', e: 'aus' },
+      { n: 'Comissionamento automático', e: 'aus' }
+    ],
+    processos: [
+      {
+        num: '2.1', nome: 'Gestão técnica da linha Abbott — coronária (consignado)',
+        resp: 'Ricardo',
+        entrada: 'Demanda do médico na rua; produtos consignados (stents, balões); 90% do negócio Abbott em consignação',
+        saida: 'Convencimento técnico conduzido; consignado e reposição geridos; contagem de estoque no hospital acompanhada',
+        sistema: 'Estoquei + contato direto — rastreabilidade do consignado por contagem manual no hospital',
+        obs: 'O sucesso comercial depende fortemente do convencimento humano individual e da contagem manual — risco de concentração de conhecimento crítico sem processo estruturado.'
+      },
+      {
+        num: '2.2', nome: 'Gestão compartilhada de representantes (com Edilma)',
+        resp: 'Ricardo + Edilma',
+        entrada: 'Representantes PJ sem exclusividade contratual; alta rotatividade; planilha de mapeamento de clientes criada por Edilma',
+        saida: 'Acompanhamento informal de campo; adesão dos representantes à planilha praticamente nula; metodologia de treinamento em 3 etapas aplicada quando há estabilidade',
+        sistema: 'Planilha manual — sem CRM; carteiras sem definição formal',
+        obs: 'Modelo de gestão compartilhada nasceu de conversa informal validada por Thulio, sem RACI. Já houve casos de representantes acionando Thulio diretamente, contornando ambos os gerentes.'
+      },
+      {
+        num: '2.3', nome: 'Acompanhamento operacional (estoque e inadimplência)',
+        resp: 'Edilma',
+        entrada: 'Solicitações de envio de material dos representantes; relatório de inadimplência acessado diretamente',
+        saida: 'Disponibilidade verificada manualmente a cada solicitação; inadimplência acompanhada e repassada ao financeiro; propostas encaminhadas ao backoffice',
+        sistema: 'Estoquei — leitura manual de relatórios brutos, sem dashboard de indicadores',
+        obs: 'Problema recorrente de demora (até 24h) na entrada de mercadoria recém-chegada no sistema. A gestora interpreta relatórios brutos sem ferramenta visual de apoio.'
+      },
+      {
+        num: '2.4', nome: 'Ritos de gestão e hierarquia de decisão',
+        resp: 'Ricardo + Edilma + Thulio',
+        entrada: 'Necessidade de alinhamento estruturado; decisões de produto/qualidade tomadas historicamente pelo backoffice sem alinhar com a gerência',
+        saida: 'Reunião quinzenal recém-implantada (sextas); reporte a Thulio em reunião própria; feedback individual aos representantes',
+        sistema: 'Reuniões — sem dashboard de CRM que sustente a pauta com dados objetivos',
+        obs: 'Falha de hierarquia de decisão entre backoffice e comercial (referência a Adriana) — risco de desalinhamento de autoridade perante o cliente. Cadência sem dado ainda depende de memória/planilha.'
+      }
+    ]
+  },
 
-/* ══════════ 3. COMPRAS ══════════ */
-{
-  id: 'compras', nome: 'Compras',
-  responsavel: 'Daniela (compradora — sozinha após saída de assistente) | 34 fornecedores nacionais + 2 internacionais (China)',
-  sistemas: [
-    { n: 'Estoquei (ERP)',      e: 'lim' },
-    { n: 'Planilhas Excel',     e: 'lim' },
-    { n: 'Templates de fornecedores', e: 'lim' },
-    { n: 'Portal de cotação',   e: 'aus' }
-  ],
-  processos: [
-    {
-      nome: 'Sugestão e planejamento de compras',
-      pbf: 'Daniela puxa relatório do Estoquei, exporta para Excel e monta manualmente a sugestão de compra (média de vendas + estoque atual + cobertura desejada de 60–90 dias). Sistema não entrega média confiável nem sugestão automática. Linha Abbott exige triângulo manual com a coordenação comercial. Linha Medtronic: template proprietário com 300+ itens, preenchido em 2–3 horas.',
-      gap: 'Sistema não tem parâmetros configuráveis (estoque mínimo, ponto de pedido, cobertura por SKU). Média calculada inclui dados de consignado na rua como se fossem vendas — distorce a sugestão. "Toda essa base de planilha falha muito nessa falta de informação."',
-      mkt: 'ERP com parâmetros de estoque mínimo, ponto de pedido e cobertura-alvo por SKU. Sugestão de compra gerada automaticamente, deduzindo consignado em campo. Comprador valida exceções e sazonalidades — não alimenta planilha.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Emissão e envio de pedidos de compra',
-      pbf: 'Daniela monta sugestão no Excel, converte para o template do fornecedor (cada um tem o seu), lança manualmente e envia. Processo leva 2–3 horas só para a Medtronic. Não existe portal unificado de pedidos. Para fornecedores menores, o pedido vai por e-mail sem rastreabilidade.',
-      gap: 'Sem portabilidade entre sistema e templates de fornecedores. Cada pedido é uma operação manual de copiar-colar entre planilhas. Daniela sozinha gerencia 34 fornecedores nacionais e 2 internacionais — sem assistente desde a saída recente.',
-      mkt: 'Sistema integra com portais de fornecedores (EDI ou API). Pedido gerado no ERP é transmitido diretamente ao fornecedor. Histórico de pedidos, entregas e desvios registrado automaticamente. Comprador foca em negociação, não em digitação.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Controle de consignado em campo e visibilidade de estoque real',
-      pbf: 'Daniela não tem visibilidade sistêmica do que está consignado nos clientes. Só consegue dados via planilha da coordenação comercial — atualizada manualmente e "passiva a erro humano". Sem essa informação, compras para 60–90 dias pode ser compra desnecessária se há estoque parado em campo.',
-      gap: '70% do faturamento é OPME (consignado). Daniela compra sem saber o que está na rua. "Mandamos 300k para um cliente, ele consumiu 50k. Significa que tenho meses de estoque nesse cliente. Esse dado eu não tenho do Estoquei." Risco de superpedido e capital empatado em campo.',
-      mkt: 'ERP consolida estoque em depósito + estoque consignado em campo por cliente. Sugestão de compra deduz automaticamente o que está em campo. Visão real de cobertura por linha e por produto disponível a qualquer momento.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Aprovação de pedidos de compra',
-      pbf: 'Todos os pedidos passam por Túlio para aprovação — independente do valor. Daniela negocia preço e prazo, monta o pedido "mastigado" e envia para Túlio. Ele aprova ou solicita ajustes. Em viagens ou feiras do setor, Túlio fecha pedidos direto com fornecedores sem avisar Daniela.',
-      gap: 'Sem alçada de aprovação por valor, qualquer compra — por menor que seja — aguarda Túlio. Em dias de ausência, os pedidos param. Pedidos fechados por Túlio em feiras chegam como surpresa para compras, sem planejamento de recebimento e estoque.',
-      mkt: 'Política de alçada documentada: Daniela aprova até R$ X por pedido/fornecedor. Acima disso, fluxo de aprovação digital para Túlio com SLA de resposta de X horas. Pedidos de feiras registrados no sistema imediatamente pelo responsável comercial.',
-      crit: 'media'
-    },
-    {
-      nome: 'Devolução a fornecedor e gestão de faturamento de entrada',
-      pbf: 'Daniela também é responsável por devolução de mercadoria avariada, faturamento de devolução e cobrança ao fornecedor. Processo de faturamento de entrada tem problemas fiscais frequentes (CFOP, tributação) que param o processo por dias até Paulo (diretoria/TI) resolver. "Chego a ficar semanas para faturar."',
-      gap: 'Sem responsável interno de faturamento fiscal. Daniela não tem formação fiscal e fica travada em problemas de parametrização. Paulo, que deveria estar na estratégia, vira suporte fiscal operacional. Processo de devolução sem fluxo definido gera comunicação falha com o financeiro.',
-      mkt: 'Parametrização fiscal de cada SKU validada no ERP (CFOP, CST, NCM, alíquotas). Devolução a fornecedor gera automaticamente NF de retorno e notifica o financeiro para encontro de contas. Comprador executa — não investiga tributação.',
-      crit: 'alta'
-    }
-  ],
-  impactos: [
-    { ic: '🔢', t: '34 fornecedores geridos por uma pessoa só', b: 'Com a saída do assistente, <strong>Daniela gerencia sozinha 34 fornecedores nacionais e 2 internacionais</strong>, monta pedidos manualmente em templates distintos e ainda cuida de devoluções — sem portal, sem automação, sem suporte.' },
-    { ic: '📦', t: 'Compra sem visibilidade do estoque em campo', b: '70% do faturamento da Safety é consignado. <strong>Daniela compra sem saber o que está na rua.</strong> "Mandamos 300k, o cliente consumiu 50k." Capital empatado em consignados sem giro — enquanto se compra mais do mesmo produto.' },
-    { ic: '⏳', t: 'Semanas para faturar uma nota de entrada', b: 'Problemas de parametrização fiscal travam notas de entrada por dias ou semanas. <strong>Paulo (sócio / diretoria) vira suporte fiscal de compras.</strong> Sem processo, cada nota com problema vira um projeto paralelo.' }
-  ]
-},
+  /* ════════════════════════════════════════
+     3. COMPRAS
+  ════════════════════════════════════════ */
+  {
+    id: 'compras', nome: 'Compras', icon: '📦',
+    responsavel: 'Daniela Estelita (Supervisora de Compras — única) + Wilton (assume Compras em ago/2026) + Robson (importação / linha própria)',
+    sistemas: [
+      { n: 'Estoquei — relatório de análise de compra', e: 'lim' },
+      { n: 'Excel — recálculo manual de sugestão', e: 'lim' },
+      { n: 'Templates próprios de fornecedor (Medtronic/Abbott)', e: 'lim' },
+      { n: 'Ponto de pedido / sugestão automática de compra', e: 'aus' },
+      { n: 'Controle de consignado por cliente', e: 'aus' },
+      { n: 'Base Safety Cirúrgica × base Safety Log (sincronizadas)', e: 'aus' }
+    ],
+    processos: [
+      {
+        num: '3.1', nome: 'Análise de estoque e sugestão de compra',
+        resp: 'Daniela',
+        entrada: 'Relatório de análise de compra do Estoquei (qualidade considerada baixa); histórico de vendas; política de cobertura por fornecedor',
+        saida: 'Sugestão de compra recalculada manualmente em Excel (média 4-6 meses, cobertura em dias); programação semanal por grupo dos 42 fornecedores',
+        sistema: 'Estoquei + Excel — campos nativos não confiáveis; recálculo manual por fornecedor',
+        obs: 'Janela de 60-90 dias para a maioria; exceção contratual Medtronic (4-6 meses). 42 fornecedores no total — 35 principais + 7 de material de consumo (embalagens, etiquetas).'
+      },
+      {
+        num: '3.2', nome: 'Pedido a fornecedores com template próprio',
+        resp: 'Daniela',
+        entrada: 'Necessidade de reposição; planilha de conversão código interno → código do fornecedor; template próprio Medtronic/Abbott',
+        saida: 'Template preenchido manualmente (sellout, estoque, pedido, forecast) — revisão de 300+ itens, 2 a 3 horas por pedido; 2-3 pedidos/mês à Medtronic',
+        sistema: 'Templates externos — sem integração ERP-fornecedor; preenchimento inteiramente manual',
+        obs: 'Daniela já teve, em empresa anterior, integração que gerava o template a partir do sistema. Hoje o trabalho é basicamente manual — 2-3h por pedido só preenchendo formulário.'
+      },
+      {
+        num: '3.3', nome: 'Negociação, cotação e aprovação',
+        resp: 'Daniela → Thulio (aprova todos)',
+        entrada: 'Ruptura ou reposição; fornecedores exclusivos e alternativos; campanhas, feiras e reajustes',
+        saida: 'Preço, prazo e condições negociados individualmente; pedido "mastigado" encaminhado a Thulio para aprovação final',
+        sistema: 'Estoquei + negociação direta — 100% dos pedidos passam por aprovação manual de Thulio, sem alçada por valor',
+        obs: 'Negociação individual com cada fornecedor. A aprovação universal de Thulio, independente de valor ou recorrência, é gargalo — mercado usa alçadas automáticas para pedidos recorrentes.'
+      },
+      {
+        num: '3.4', nome: 'Consignado Abbott e divergência de bases (Cirúrgica × Log)',
+        resp: 'Daniela + Gislaine',
+        entrada: 'Saldo em cliente no Estoquei (sem separar utilizado de disponível); saldo físico na base da Safety Log',
+        saida: 'Sugestão de compra baseada no estoque disponível na empresa — aproximação imprecisa; pressão informal sobre representantes para redistribuir estoque parado',
+        sistema: 'Estoquei — bases da Cirúrgica e da Log dessincronizadas; sem visão confiável de consumo real por cliente',
+        obs: 'Divergência gritante confirmada na validação (ex: Cirúrgica via 0 unidades; Log tinha 16). Nunca houve inventário na base da Cirúrgica em 1 ano e 5 meses. É a prioridade zero: automatizar sobre dado errado gera compra errada.'
+      },
+      {
+        num: '3.5', nome: 'Recebimento e entrada de mercadoria',
+        resp: 'Daniela + Safety Log',
+        entrada: 'Carga recebida pela logística (Safety Log); nota fiscal do fornecedor',
+        saida: 'Entrada no sistema realizada — quando Daniela cobra ativamente; sem aviso automático de chegada',
+        sistema: 'Estoquei + WhatsApp/telefone — sem protocolo de aviso de recebimento nem prazo de entrada',
+        obs: 'A logística recebe carga e não avisa Compras. Sem Daniela "em cima", a entrada atrasa dias (caso real: nota do dia 22 só lançada por cobrança direta). Falta SLA de conferência e entrada.'
+      }
+    ]
+  },
 
-/* ══════════ 4. FINANCEIRO ══════════ */
-{
-  id: 'financ', nome: 'Financeiro',
-  responsavel: 'Shirleane (Analista — contas a pagar, comissões, RH informal, conciliação) + Alan (Assistente — contas a receber, inadimplência, viagens) + Vitória (Menor aprendiz)',
-  sistemas: [
-    { n: 'Estoquei (ERP)',       e: 'lim' },
-    { n: 'Planilhas Excel',      e: 'lim' },
-    { n: 'Empresa Meta (fiscal/DP)', e: 'lim' },
-    { n: 'API bancária',         e: 'aus' }
-  ],
-  processos: [
-    {
-      nome: 'Cobrança de inadimplência',
-      pbf: 'Alan envia relatório de inadimplência por e-mail aos gerentes e cobra diariamente os representantes (por e-mail e ligação). O financeiro é responsável por 95% do esforço de cobrança. Gerentes não se engajam. Shirleane faz contato com clientes diretos. Antes de cobrar, sempre verifica com o backoffice se a nota não foi cancelada ou devolvida sem comunicação.',
-      gap: 'Gerentes e representantes não têm processo de cobrança formal. Financeiro assume função que deveria ser do comercial. Notas canceladas sem comunicação ao financeiro geram cobranças indevidas e desgaste com clientes. Representantes difíceis de localizar por telefone.',
-      mkt: 'CRM integrado com financeiro: inadimplência aparece automaticamente no painel do gerente e do representante. Fluxo de cobrança com responsabilidade definida por faixa de atraso (1–15 dias: representante; 15–30 dias: gerente; 30+: financeiro + Túlio). Histórico de contatos registrado no sistema.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Cálculo e fechamento de comissões',
-      pbf: 'Todo dia 10, Shirleane recebe o relatório de vendas da coordenação comercial e cruza com o relatório do Estoquei por representante. Problema: o sistema registra notas com nome errado de representante. A coordenação manda a relação correta — mas diverge do sistema. Shirleane fica no meio dos dois, sem poder confiar em nenhuma fonte isolada.',
-      gap: '"Tem nota que sai com nome errado de representante." Shirleane não confia no relatório do sistema para comissionar sozinha — precisa sempre se alinhar com a coordenação. Processo manual, sujeito a erro e a contestação pelo representante no dia do pagamento.',
-      mkt: 'Atribuição de representante feita no momento do lançamento da venda, com campo obrigatório e não editável após faturamento. Comissão calculada automaticamente pelo sistema com regra parametrizada por representante. Relatório validado uma vez por mês — não reconstruído.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Contas a pagar e fluxo de aprovação',
-      pbf: 'Shirleane monta relatório de contas a pagar no Estoquei, submete a Túlio para aprovação, Túlio autoriza, Shirleane executa o pagamento banco a banco. Todas as contas passam por Túlio, sem alçada. Urgências quebram o fluxo toda semana. Pagamentos que não são de fornecedores (consumo interno, fardamento, etc.) são lançados manualmente.',
-      gap: 'Sem alçada de valor, qualquer pagamento — inclusive pequenos — aguarda Túlio. Em dias de ausência de Túlio (viagens, feiras), pagamentos param. Fornecedores cobram Daniela por notas vencidas que ainda aguardam aprovação no ciclo financeiro.',
-      mkt: 'Política de alçada: Shirleane aprova pagamentos até R$ X sem necessidade de aprovação. Acima disso, aprovação digital de Túlio com SLA de resposta. Pagamentos em lote programados semanalmente — não executados um a um banco a banco.',
-      crit: 'alta'
-    },
-    {
-      nome: 'Gestão de viagens e despesas de representantes',
-      pbf: 'Alan coteja passagens, hospedagem e locação de carros para representantes. Problema recorrente: representantes solicitam viagem em cima da hora, obrigando compras a preços elevados. Existe política de despesas, mas representantes ultrapassam os limites. Cada exceção vai para Túlio decidir.',
-      gap: 'Solicitação de última hora é regra, não exceção. Custo de viagem elevado sem controle sistêmico. Política não é cumprida espontaneamente. Alan resolve caso a caso sem suporte de ferramenta de gestão de despesas.',
-      mkt: 'Plataforma de gestão de viagens com SLA de solicitação mínima (ex: 72h antes). Política de despesas parametrizada com limites por categoria. Acima do limite, aprovação digital automática vai para Túlio. Relatório mensal de gastos por representante e por região.',
-      crit: 'media'
-    },
-    {
-      nome: 'Relatórios financeiros e indicadores',
-      pbf: 'Shirleane monta planilha de contas a pagar e a receber manualmente. Relatórios do Estoquei têm inconsistências (pendentes e baixados misturados). Não existe DRE gerencial. Fluxo de caixa projetado é feito pela Shirleane informalmente. Indicador de inadimplência não é extraído do sistema — é construído em planilha.',
-      gap: 'Túlio toma decisões financeiras sem base consolidada confiável. Provisionamento do mês seguinte (pedido por Túlio todo dia 27–28) é feito manualmente às pressas. "O relatório do sistema vai murchar" — dito pela própria Shirleane sobre a confiabilidade dos dados.',
-      mkt: 'DRE gerencial e fluxo de caixa projetado extraídos automaticamente do ERP. Painel de inadimplência por faixa de atraso atualizado em tempo real. Provisionamento automático baseado em histórico de recebimento. Shirleane analisa — não constrói planilha.',
-      crit: 'alta'
-    },
-    {
-      nome: 'RH informal e DP paralelo',
-      pbf: 'Shirleane acumula funções informais de RH: controla férias em planilha, valida atestados, solicita documentação de contratação (PJ e CLT), confere folha de pagamento, compra fardamento e crachá. DP é terceirizado para empresa externa (comunicação por Telegram). Sem RH interno, Shirleane é o ponto de contato de todos.',
-      gap: 'Shirleane perde tempo significativo com atividades que não são do escopo financeiro. Controle de férias é informal ("entrego na mão de Deus"). Um colaborador conseguiu tirar 40 dias de férias aproveitando brecha no controle. Sem RH, processos de contratação e desligamento são lentos e reativos.',
-      mkt: 'HRIS (sistema de RH) básico para controle de férias, atestados e jornada. DP terceirizado com portal de integração — não por Telegram. Shirleane executa apenas aprovação de folha, não a gestão de todo o ciclo de RH.',
-      crit: 'media'
-    }
-  ],
-  impactos: [
-    { ic: '💸', t: 'Financeiro assume 95% da cobrança sozinho', b: 'Alan e Shirleane cobram clientes inadimplentes sem apoio efetivo do comercial. <strong>Gerentes não se engajam.</strong> O financeiro vira atendimento de cobrança — função que deveria ser liderada pelo representante e gerente que fizeram a venda.' },
-    { ic: '📊', t: 'Comissão calculada sem fonte confiável', b: 'Sistema registra notas com representante errado. Relatório da coordenação diverge do sistema. <strong>Shirleane comissiona no cruzamento manual dos dois</strong> — sujeito a erro todo mês e a contestação no dia do pagamento.' },
-    { ic: '🧾', t: 'Shirleane faz financeiro, RH e suporte ao DP', b: 'Além de contas a pagar, conciliação e comissões, Shirleane controla férias, valida atestados, compra fardamento e se comunica com o DP via Telegram. <strong>Acúmulo de funções incompatível com o volume da empresa.</strong>' }
-  ]
-},
+  /* ════════════════════════════════════════
+     4. LOGÍSTICA E CAMPO
+  ════════════════════════════════════════ */
+  {
+    id: 'logist', nome: 'Logística e Campo', icon: '🚚',
+    responsavel: 'Safety Log (logística terceirizada) + Alexandre, Fernanda, Wellen (enfermeiros/técnicos) + freelancers Meta',
+    sistemas: [
+      { n: 'Base Safety Log (estoque físico e expedição)', e: 'lim' },
+      { n: 'Estoquei — base Safety Cirúrgica', e: 'aus' },
+      { n: 'Protocolo digital de entrega/devolução de equipamentos', e: 'aus' },
+      { n: 'Aviso sistêmico de chegada de carga', e: 'aus' }
+    ],
+    processos: [
+      {
+        num: '4.1', nome: 'Recebimento físico e entrada de NF',
+        resp: 'Safety Log',
+        entrada: 'Carga do fornecedor com NF; pedido de compra correspondente',
+        saida: 'Mercadoria recebida fisicamente; entrada no sistema realizada de forma reativa, dependente de cobrança de Compras',
+        sistema: 'Base Safety Log — sem checagem de pedido na chegada, sem aviso automático a Compras',
+        obs: 'A logística não avisa a chegada e não confere se há pedido no sistema. Sem prazo (SLA) de conferência e entrada, o material pode ficar dias sem lançamento.'
+      },
+      {
+        num: '4.2', nome: 'Divergência entre base Cirúrgica e base Log',
+        resp: 'Safety Log + Gislaine (único acesso ao sistema da Log)',
+        entrada: 'Inventários realizados na base da Safety Log; movimentações de estoque',
+        saida: 'Base da Log atualizada; base da Safety Cirúrgica permanece divergente — nunca conciliada',
+        sistema: 'Base Safety Log ≠ Estoquei Cirúrgica — inventários não migram entre as bases',
+        obs: 'Diferenças gritantes entre as duas bases (linha Abbott, grampeadores). Só Gislaine acessa o sistema da Log. Precisa de inventário consolidado nas duas bases.'
+      },
+      {
+        num: '4.3', nome: 'Entrega e recolhimento de materiais e equipamentos',
+        resp: 'Técnicos/enfermeiros (Alexandre, Fernanda, Wellen)',
+        entrada: 'Materiais e equipamentos liberados para o procedimento; rota de deslocamento definida pela coordenação',
+        saida: 'Material entregue e recolhido pós-cirurgia; deslocamento acumulado com o atendimento cirúrgico',
+        sistema: 'Protocolo físico/WhatsApp — sem registro digital de entrega/devolução',
+        obs: 'Técnicos acumulam o deslocamento de equipamentos com o atendimento (ex: retorno de Caruaru às 2h para cirurgia às 6h), comprometendo qualidade e segurança. Ponto cego de localização entre saída e retorno.'
+      },
+      {
+        num: '4.4', nome: 'Atuação técnica em cirurgia e suporte ao hospital',
+        resp: 'Enfermeiros/técnicos de campo',
+        entrada: 'Agenda cirúrgica; equipamento e instrumental do procedimento',
+        saida: 'Procedimento apoiado tecnicamente; suporte prestado ao hospital durante e após a cirurgia',
+        sistema: 'Sem sistema dedicado — coordenação por WhatsApp e planilha',
+        obs: 'Auxílios de combustível e alimentação (R$500 cada) estão defasados frente ao custo real de viagens ao interior de PE, RN e CE.'
+      }
+    ]
+  },
 
-/* ══════════ 5. SUPERVISÃO ADM / VENDAS INTERNAS ══════════ */
-{
-  id: 'adm', nome: 'Sup. ADM / Vendas Internas',
-  responsavel: 'Robson (Supervisor ADM — na prática: importação + vendas internas + suporte a cotações) | Analice (Licitação — reporta a Gislaine)',
-  sistemas: [
-    { n: 'Estoquei (ERP)',     e: 'lim' },
-    { n: 'Portais (Bionex, Síntese)', e: 'lim' },
-    { n: 'E-mail / WhatsApp', e: 'lim' },
-    { n: 'Sistema de importação', e: 'aus' }
-  ],
-  processos: [
-    {
-      nome: 'Importação da linha Domo Dynamica',
-      pbf: 'Robson lidera as importações da linha própria (Leopold Metal, Yankee e Bros Metal). Em 2024 realizou 3 importações; em 2026 ainda não havia realizado nenhuma. Processo completo da importação (compra internacional, entrada fiscal, venda) está concentrado em Robson sem documentação de procedimento.',
-      gap: 'Linha de importação ociosa em 2026. Processo de importação sem documentação — se Robson sair, o conhecimento vai junto. Sem parametrização fiscal de produtos importados, cada entrada gera dúvida tributária.',
-      mkt: 'Procedimento de importação documentado (POP): etapas, responsáveis, prazos, documentos e validações fiscais. Planejamento anual de importações alinhado com compras e comercial. Processo executável por mais de uma pessoa.',
-      crit: 'media'
-    },
-    {
-      nome: 'Vendas internas e atendimento a portais (Bionex, Síntese)',
-      pbf: 'Robson atende portais de venda direta (Bionex, Síntese) e apoia cotações internas. Na prática, funciona como vendedor interno do portfólio completo da Safety — embora o título seja de Supervisor ADM. Não trabalha com consignado. 90% da receita de Robson vem de acessórios de cardiologia.',
-      gap: 'Cargo de Supervisor ADM sem liderados — a função real é de vendedor interno. Falta de clareza sobre o papel gera expectativa equivocada de "supervisão" que não existe. Robson tem tempo ocioso sem aproveitamento para suportar outros processos.',
-      mkt: 'Cargo redefinido formalmente como Vendedor Interno / Especialista de Portais. Metas claras de faturamento por portal e por linha. Processo de atendimento de portais documentado e transferível. Eventuais horas ociosas utilizadas para suporte à coordenação em períodos críticos.',
-      crit: 'baixa'
-    },
-    {
-      nome: 'Licitação (Analice)',
-      pbf: 'Analice opera licitações para todas as linhas, reportando primariamente a Gislaine (que implantou o processo). Participa de lances, orienta valores e processo. Para negociações de produto de linhas específicas, consulta a coordenadora da linha. Não tem estrutura de monitoramento automático de editais.',
-      gap: 'Processo de licitação iniciado por Gislaine sem documentação formal transferível. Analice aprendeu "como era feito" sem POP escrito. Sem plataforma de monitoramento, editais são capturados reativamente. Risco de perda de oportunidades em estados fora do radar.',
-      mkt: 'Plataforma de monitoramento de editais com filtro por produto e estado. Processo de licitação documentado passo a passo. Analice executa com autonomia, consultando coordenação apenas para definição de preço mínimo por produto e linha.',
-      crit: 'media'
-    },
-    {
-      nome: 'Gestão de comissionamento dos representantes externos (PMO)',
-      pbf: 'Robson e Alan foram designados como PMO (gestores do processo de implementação da consultoria) pela TECNASA. Robson tem tempo disponível para absorver tarefas de suporte administrativo e de acompanhamento de processos.',
-      gap: 'Papel de PMO não está claro para Robson nem para o time. Sem reunião regular de acompanhamento de implementação, os ritos comerciais implementados pela consultoria correm risco de não serem sustentados após o fim do contrato.',
-      mkt: 'PMO com rotina quinzenal documentada: checklist de processos implementados, indicadores monitorados, escalada de problemas. Robson assume o papel de guardião dos processos internos enquanto a consultoria acompanha externamente.',
-      crit: 'media'
-    }
-  ],
-  impactos: [
-    { ic: '🔀', t: 'Cargo de Supervisor sem equipe para supervisionar', b: 'Robson é Supervisor ADM sem liderados. Na prática é vendedor interno e responsável por importações. <strong>Cargo inadequado ao papel real</strong> — gera ambiguidade e impede que Robson seja aproveitado nos processos certos.' },
-    { ic: '💤', t: 'Tempo ocioso de um colaborador qualificado', b: 'Tulio e Paulo reconhecem que Robson tem tempo ocioso. Ele tem histórico como gerente de suprimentos com equipe de 25 pessoas. <strong>Potencial subutilizado</strong> enquanto a empresa tem déficit de suporte operacional no backoffice e em compras.' },
-    { ic: '📄', t: 'Licitação sem processo documentado',  b: 'Analice aprendeu o processo com Gislaine, sem POP escrito. <strong>Se Analice sair, a licitação para.</strong> Mesmo risco enfrentado com a saída de Adriana no backoffice — conhecimento concentrado em pessoa, não em processo.' }
-  ]
-}
+  /* ════════════════════════════════════════
+     5. SUPERVISÃO / VENDAS INTERNAS / LICITAÇÃO
+  ════════════════════════════════════════ */
+  {
+    id: 'superv', nome: 'Supervisão / Vendas Internas / Licitação', icon: '🏛️',
+    responsavel: 'Robson Joaquim (Supervisor de Vendas — sem liderados) + Analice Aucélia (licitação)',
+    sistemas: [
+      { n: 'Portais de cotação (Síntese, Bionexo, Apoio)', e: 'lim' },
+      { n: 'Estoquei — faturamento da venda direta', e: 'lim' },
+      { n: 'Força de Vendas / sugestão automática de recompra', e: 'aus' },
+      { n: 'Indicadores de performance', e: 'aus' },
+      { n: 'Processo de licitação documentado (POP)', e: 'aus' }
+    ],
+    processos: [
+      {
+        num: '5.1', nome: 'Vendas diretas — linha Hemodinâmica / acessórios',
+        resp: 'Robson',
+        entrada: 'Cotações nos portais Síntese, Bionexo e Apoio (monitoradas toda manhã); itens sem estoque',
+        saida: 'Cotação respondida imediatamente no portal; venda faturada do início ao fim; venda externa com visita a clientes (assumida recentemente)',
+        sistema: 'Portais + Estoquei — monitoramento manual diário, sem sugestão automática de recompra',
+        obs: 'Modelo de recompra recorrente feito manualmente em cada portal. Ferramentas de Força de Vendas (Mercos, Bendito) sugeririam o próximo pedido automaticamente.'
+      },
+      {
+        num: '5.2', nome: 'Compras e importação da linha própria',
+        resp: 'Robson',
+        entrada: 'Demanda da linha Leopold Medical / Yankee Bras Medical; necessidade de reposição rápida',
+        saida: 'Importação internacional (3 no ano anterior, 0 no ano corrente) e compra nacional complementar; compra sob demanda ("chegou, saiu")',
+        sistema: 'Estoquei + processo de importação próprio — com autonomia de aprovação para venda direta',
+        obs: 'Acumula cotação, compra internacional, importação e venda simultaneamente. A própria empresa já cogitou separar Robson para focar exclusivamente em venda direta.'
+      },
+      {
+        num: '5.3', nome: 'Licitação (conduzida por Analice)',
+        resp: 'Analice + Robson',
+        entrada: 'Editais captados; documentação exigida pelo órgão',
+        saida: 'Proposta montada, disputa conduzida, documentação pós-ganho tratada e faturamento realizado',
+        sistema: 'Portais públicos — processo implantado por Robson e executado por Analice, sem POP formal',
+        obs: 'Processo funcional, mas concentrado no conhecimento de Analice e sem documentação — risco de dependência de pessoa.'
+      },
+      {
+        num: '5.4', nome: 'Cargo de supervisor sem escopo definido',
+        resp: 'Robson + Thulio',
+        entrada: 'Cargo formal de Supervisor de Vendas sem liderados nem atribuições claras',
+        saida: 'Atuação como vendedor interno, comprador e importador — potencial subutilizado; desejo explícito de ser cobrado por indicadores',
+        sistema: 'Sem indicadores formais de performance',
+        obs: 'Vácuo de escopo reconhecido por Thulio e Gislaine. Robson afirma gostar de indicadores e querer ser cobrado por eles — oportunidade clara de engajamento se implantados.'
+      }
+    ]
+  },
 
-]; // END SETORES
+  /* ════════════════════════════════════════
+     6. FINANCEIRO
+  ════════════════════════════════════════ */
+  {
+    id: 'fin', nome: 'Financeiro', icon: '💰',
+    responsavel: 'Shirleane Araújo (Analista) + Alan Matheus (Auxiliar) + Meta Contábil (contábil, fiscal e DP — terceirizada)',
+    sistemas: [
+      { n: 'Estoquei — módulo financeiro', e: 'lim' },
+      { n: 'Planilhas paralelas (conciliação e comissão)', e: 'lim' },
+      { n: 'Baixa parcial no relatório diário', e: 'aus' },
+      { n: 'Vínculo de representante na NF (persistência)', e: 'aus' },
+      { n: 'Régua de cobrança automatizada', e: 'aus' },
+      { n: 'V Expense — despesas de viagem', e: 'lim' }
+    ],
+    processos: [
+      {
+        num: '6.1', nome: 'Contas a pagar e conciliação bancária',
+        resp: 'Shirleane',
+        entrada: 'Títulos a pagar; despesas internas lançadas manualmente; extrato bancário diário',
+        saida: 'Fluxo de caixa planejado; pagamento e baixa realizados; conciliação diária extrato × sistema × planilha',
+        sistema: 'Estoquei + planilha — baixa parcial não reflete no relatório diário; controle paralelo obrigatório',
+        obs: 'Falha de baixa parcial. Workaround em uso: compensações de notas duplicadas lançadas com data de sábado/domingo para não sujar o relatório diário — prática informal com risco de auditoria.'
+      },
+      {
+        num: '6.2', nome: 'Fechamento de comissões',
+        resp: 'Shirleane',
+        entrada: 'Relatório de vendas do sistema; planilha de controle; baixas financeiras do mês',
+        saida: 'Comissão fechada por cruzamento manual nota por nota (duas telas); cálculo sobre valor recebido (30/60/90 dias)',
+        sistema: 'Estoquei + planilha — notas saem sem nome de representante mesmo com bloqueio configurado (falha do sistema)',
+        obs: 'Maior gargalo isolado do financeiro. Representantes são mensais e vendedores trimestrais. A Meta Representações tem regra própria acordada separadamente.'
+      },
+      {
+        num: '6.3', nome: 'Cobrança de inadimplência',
+        resp: 'Alan',
+        entrada: 'Relatório de inadimplência; retorno (ou ausência de retorno) dos gerentes comerciais',
+        saida: 'Cobrança acionada aos gerentes e diretamente ao cliente; causa-raiz investigada (erro de faturamento, falta de nota) antes de insistir',
+        sistema: 'Estoquei + contato manual — sem régua de cobrança automatizada multicanal',
+        obs: 'Historicamente 95% das pendências são resolvidas só pelo financeiro. O comercial ganha comissão sobre o recebimento, mas não engaja proporcionalmente. Melhora recente (últimos 20 dias) com os novos ritos de reunião.'
+      },
+      {
+        num: '6.4', nome: 'Gestão de despesas de viagem',
+        resp: 'Alan',
+        entrada: 'Solicitações de viagem dos representantes; política de despesas vigente',
+        saida: 'Passagem/hotel/locação cotados; despesas revisadas no V Expense; exceções sinalizadas a Thulio',
+        sistema: 'V Expense + cotação manual — ferramenta adequada, mas gargalo na antecedência das solicitações',
+        obs: 'Reservas de última hora encarecem passagens e locações. O ideal é antecedência mínima de 10 dias — disciplina ainda em consolidação.'
+      },
+      {
+        num: '6.5', nome: 'Relatórios, DP e outras demandas (WhatsApp)',
+        resp: 'Shirleane + Alan',
+        entrada: 'Relatórios para a Meta Contábil; espelho de folha; demandas de DP; suporte a representantes por WhatsApp',
+        saida: 'Relatórios enviados por e-mail/WhatsApp; folha conferida; DP informal atendido (PJ com a advogada Fernanda); suporte a representantes resolvido',
+        sistema: 'Estoquei + Meta Contábil (terceirizada) — comunicação por telefone comercial instável; sem RH interno',
+        obs: 'Alan estima que 30-40% do seu tempo diário vai para suporte informal via WhatsApp (notas, boletos, devoluções). Shirleane absorve demandas administrativas (fardamento, ponto, linhas móveis) por falta de apoio administrativo.'
+      }
+    ]
+  },
+
+  /* ════════════════════════════════════════
+     7. SUPORTE / TI (ESTOQUEI)
+  ════════════════════════════════════════ */
+  {
+    id: 'ti', nome: 'Suporte / TI (Estoquei)', icon: '💻',
+    responsavel: 'Paulo (proprietário do sistema Estoquei — suporte prioritário) + Hugo (suporte geral)',
+    sistemas: [
+      { n: 'Estoquei (ERP — sustentação com Paulo)', e: 'lim' },
+      { n: 'Roadmap único de pendências com SLA', e: 'aus' },
+      { n: 'Módulo de consignado por cliente', e: 'aus' },
+      { n: 'Sugestão automática de compra / comissão automática', e: 'aus' },
+      { n: 'Dashboard executivo', e: 'aus' }
+    ],
+    processos: [
+      {
+        num: '7.1', nome: 'Fase 1 — Correções críticas',
+        resp: 'Paulo (Estoquei) + Shirleane + Gislaine',
+        entrada: 'Falhas confirmadas no sistema: baixa parcial, vínculo de representante, exportação de lote',
+        saida: 'Correções que destravam a operação diária: relatório de baixa parcial correto, representante persistindo no relatório, lote no formato dos portais',
+        sistema: 'Estoquei — itens que já existem no sistema e falham; base para as fases seguintes',
+        obs: 'São correções de falhas existentes (não funcionalidades novas). Impacto diário real e mensurável em Financeiro e Coordenação Comercial.'
+      },
+      {
+        num: '7.2', nome: 'Fase 2 — Parâmetros e módulos novos',
+        resp: 'Paulo (Estoquei) + Daniela + Gislaine',
+        entrada: 'Correções da Fase 1 concluídas; parâmetros de estoque e arquivos-modelo dos hospitais',
+        saida: 'Módulo de consignado por cliente, leitura de arquivo de uso, estoque mínimo/ponto de pedido, pedidos em trânsito, protocolo de equipamentos e alerta de calibração',
+        sistema: 'Estoquei — base para as automações da Fase 3',
+        obs: 'Depende das correções da Fase 1 e da conciliação das bases Cirúrgica × Log. Arquivos-modelo (Unimed, Português) e parâmetros de estoque a entregar por Gislaine e Daniela.'
+      },
+      {
+        num: '7.3', nome: 'Fase 3 — Automações',
+        resp: 'Paulo (Estoquei) + Financeiro + Compras + Comercial',
+        entrada: 'Fases 1 e 2 estáveis; parâmetros preenchidos e base confiável',
+        saida: 'Sugestão automática de compra, cálculo automático de comissão, CRM/carteira, DRE e fluxo de caixa projetado, dashboard executivo',
+        sistema: 'Estoquei — só fazem sentido com base correta e parâmetros preenchidos',
+        obs: 'Automatizar sobre dados sujos produz resultados errados. A sequência de fases respeita as dependências entre itens.'
+      },
+      {
+        num: '7.4', nome: 'Governança do desenvolvimento com Paulo',
+        resp: 'TECNASA + Paulo + Thulio',
+        entrada: 'Demandas hoje tratadas informalmente por WhatsApp, sem prazo, status ou priorização consolidada',
+        saida: 'Lista única e priorizada de pendências; roadmap com prazo e responsável; reunião quinzenal de acompanhamento',
+        sistema: 'WhatsApp — a substituir por roadmap único acompanhado formalmente',
+        obs: 'Modelo atual de demandas informais sem SLA. Primeiro passo: consolidar as pendências em documento único e instituir reunião quinzenal com Paulo.'
+      }
+    ]
+  }
+
+]; // END CADEIA
+
+/* ════════════════════════════════════════
+   ACHADOS CONSOLIDADOS
+════════════════════════════════════════ */
+const ACHADOS = [
+  {
+    icon: '📦', setor: 'Compras',
+    title: 'Compradora sozinha e bases Cirúrgica × Log dessincronizadas',
+    desc: 'Daniela cobre <strong>42 fornecedores sozinha</strong> (Wilton assume em ago/2026). As bases da Safety Cirúrgica e da Safety Log estão <strong>completamente divergentes</strong> — em um caso, o sistema via 0 unidades e a Log tinha 16. <strong>Nunca houve inventário na base da Cirúrgica</strong> em 1 ano e 5 meses. Sugestão automática sobre esse dado produziria compra errada.',
+    destaque: true
+  },
+  {
+    icon: '🏥', setor: 'Comercial / Coordenação',
+    title: 'Saída de Adriana concentrou o consignado permanente em Gislaine',
+    desc: 'Com a saída de Adriana (jun/2026), o <strong>consignado permanente Abbott</strong> (linha mais crítica, 5 estados) passou integralmente a Gislaine <strong>sem POP documentado</strong>. Cotação pós ainda exige <strong>inserção manual de lote</strong> em cada portal e leitura manual de arquivos de uso de 60-80 páginas.',
+    destaque: true
+  },
+  {
+    icon: '💻', setor: 'Suporte / TI',
+    title: 'Duas falhas do Estoquei travam financeiro e comissão',
+    desc: 'A <strong>baixa parcial</strong> não aparece no relatório diário (força controle paralelo em planilha) e o <strong>nome do representante</strong> some da nota mesmo com bloqueio configurado. São correções de <strong>falhas existentes</strong> — não funcionalidades novas — e bloqueiam a conciliação e o comissionamento automáticos.',
+    destaque: true
+  },
+  {
+    icon: '💼', setor: 'Financeiro',
+    title: 'Fechamento de comissão nota por nota em duas telas',
+    desc: 'Shirleane cruza <strong>manualmente nota por nota</strong> entre o relatório do sistema e a planilha para achar o representante, sobre valor recebido (30/60/90). É o <strong>maior gargalo isolado</strong> do financeiro — dependente da correção do vínculo de representante.',
+    destaque: false
+  },
+  {
+    icon: '🤝', setor: 'Comercial / Gerência',
+    title: 'Carteira sem CRM e hierarquia de decisão indefinida',
+    desc: 'Clientes e representantes controlados por <strong>planilha com adesão quase nula</strong> e por memória. A gestão compartilhada Ricardo/Edilma nasceu informal, <strong>sem RACI</strong> — já houve representante acionando Thulio direto, contornando os dois gerentes.',
+    destaque: false
+  },
+  {
+    icon: '📞', setor: 'Financeiro',
+    title: 'Financeiro sozinho: 95% da cobrança sem apoio do comercial',
+    desc: 'Alan resolve sozinho quase toda a inadimplência. O comercial — que <strong>ganha comissão sobre o recebimento</strong> — não se engaja proporcionalmente. Houve melhora nos últimos 20 dias com os novos ritos, mas o padrão estrutural depende de acompanhamento sustentado.',
+    destaque: false
+  },
+  {
+    icon: '🚚', setor: 'Logística e Campo',
+    title: 'Técnicos acumulam entrega de equipamentos com a cirurgia',
+    desc: 'Enfermeiros/técnicos acumulam o <strong>deslocamento de equipamentos</strong> com o atendimento cirúrgico (ex: retorno de Caruaru às 2h para cirurgia às 6h). O protocolo é <strong>físico/WhatsApp</strong>, com ponto cego de localização entre a saída e o retorno.',
+    destaque: false
+  },
+  {
+    icon: '🏛️', setor: 'Supervisão / Vendas Internas',
+    title: 'Supervisor sem escopo e sem indicadores',
+    desc: 'Robson tem cargo de supervisor <strong>sem nenhum liderado</strong> e acumula venda direta, compras, importação e coordenação logística de uma linha. Ele <strong>deseja ser cobrado por indicadores</strong>, mas não possui nenhum — vácuo reconhecido por Thulio e Gislaine.',
+    destaque: false
+  },
+  {
+    icon: '📥', setor: 'Compras / Logística',
+    title: 'Recebimento sem aviso e sem prazo de entrada',
+    desc: 'A logística recebe a carga e <strong>não avisa Compras</strong> nem confere se há pedido. Sem Daniela "em cima", a entrada no sistema atrasa dias (caso real: nota do dia 22 lançada só por cobrança direta). Falta <strong>SLA de conferência e entrada</strong>.',
+    destaque: false
+  }
+];
